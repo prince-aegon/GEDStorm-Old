@@ -1,0 +1,5 @@
+main.py
+parser
+parser.o
+.depend
+.vscode
