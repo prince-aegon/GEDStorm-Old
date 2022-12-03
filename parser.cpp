@@ -3,7 +3,7 @@
 #include <map>
 #include "address.h"
 using namespace std;
-#define FILE_NAME "Basic1.ged"
+#define FILE_NAME "Basic.ged"
 
 typedef enum cSet
 {
@@ -19,6 +19,9 @@ typedef enum evSet
     MARR,
     DEAT
 } EventSet;
+
+// for every id of an event, we might push it into map of id, object and use it to
+// grab data when we encounter a need call.
 
 // Submitter Record
 class Submitter
