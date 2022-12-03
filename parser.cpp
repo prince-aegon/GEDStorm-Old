@@ -13,6 +13,13 @@ typedef enum cSet
     ASCII
 } CharSet;
 
+typedef enum evSet
+{
+    BIRT,
+    MARR,
+    DEAT
+} EventSet;
+
 // Submitter Record
 class Submitter
 {
@@ -22,11 +29,13 @@ public:
     map<string, string> details;
 };
 
-class Comment
+// Source Record
+class SourceRecord
 {
 public:
-    string commentType;
-    int commentLength;
+    EventSet events[3];
+    string date;
+    string relInfo1[4];
 };
 
 class Header
@@ -35,6 +44,15 @@ public:
     char source[256];
     float gedcomVersion;
     CharSet encoding;
+    SourceRecord *src;
+    Submitter *submitter;
+};
+
+class Comment
+{
+public:
+    string commentType;
+    int commentLength;
 };
 
 void commentCheck(string s, Comment comment)
