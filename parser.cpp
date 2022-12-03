@@ -1,8 +1,26 @@
 #include <iostream>
 #include <fstream>
-
+#include <map>
+#include "address.h"
 using namespace std;
 #define FILE_NAME "Basic1.ged"
+
+typedef enum cSet
+{
+    ANSEL,
+    UTF8,
+    UNICODE,
+    ASCII
+} CharSet;
+
+// Submitter Record
+class Submitter
+{
+public:
+    char submitterName[64];
+    Address *addr;
+    map<string, string> details;
+};
 
 class Comment
 {
@@ -10,11 +28,13 @@ public:
     string commentType;
     int commentLength;
 };
+
 class Header
 {
 public:
     char source[256];
     float gedcomVersion;
+    CharSet encoding;
 };
 
 void commentCheck(string s, Comment comment)

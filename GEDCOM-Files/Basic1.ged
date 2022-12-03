@@ -1,10 +1,9 @@
 0 HEAD
 1 GEDC
-2 VERS 5.5.5
-// outline comment
-2 FORM LINEAGE-LINKED // space inline comment
-3 VERS 5.5.5    // tab inline comment
-1 CHAR UTF-8
+2 VERS 5.5.5 // version
+2 FORM LINEAGE-LINKED // gedcom FORM
+3 VERS 5.5.5 // version
+1 CHAR UTF-8 // encoding    
 1 SOUR GS
 2 NAME GEDCOM Specification
 2 VERS 5.5.5
