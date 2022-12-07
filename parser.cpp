@@ -83,6 +83,23 @@ public:
     int commentLength;
 };
 
+/*
+map : lines
+    stores all lines for a particular tag
+*/
+map<string, vector<vector<string>>> lines;
+
+// stores objects of submitter class with id as key
+map<string, Submitter *> Submitters;
+
+// 2d vector to help in lines
+vector<vector<string>> submitterLines;
+
+// stack having current parser tag and id of current tag
+stack<pair<string, string>> curr;
+vector<vector<vector<string>>> subsets;
+vector<vector<string>> all_lines;
+
 void commentCheck(string s, Comment comment)
 {
     cout << "Type    : " << comment.commentType << endl;
@@ -106,21 +123,6 @@ vector<string> splitString(string s, string delimiter)
     res.push_back(s.substr(pos_start));
     return res;
 }
-
-/*
-map : lines
-    stores all lines for a particular tag
-*/
-map<string, vector<vector<string>>> lines;
-
-// stores objects of submitter class with id as key
-map<string, Submitter *> Submitters;
-
-// 2d vector to help in lines
-vector<vector<string>> submitterLines;
-
-// stack having current parser tag and id of current tag
-stack<pair<string, string>> curr;
 
 void submTag(vector<string> submSplit)
 {
@@ -236,39 +238,68 @@ int main()
 
         // split current line
         vector<string> split = splitString(s, " ");
+        all_lines.push_back(split);
 
         // process subm tag
-        if (split.size() >= 3 && split[0] == "0" && split[2] == "SUBM")
-        {
-            submTag(split);
-            continue;
-        }
+        // if (split.size() >= 3 && split[0] == "0" && split[2] == "SUBM")
+        // {
+        //     submTag(split);
+        //     continue;
+        // }
 
-        // get name for subm tag
-        if (curr.top().first == "SUBM")
+        // // get name for subm tag
+        // if (curr.top().first == "SUBM")
+        // {
+        //     getName(split, curr.top().second);
+        // }
+    }
+    for (int i = 0; i < all_lines.size();)
+    {
+        if (all_lines[i][0] == "0")
         {
-            getName(split, curr.top().second);
+            vector<vector<string>> temp;
+            temp.push_back(all_lines[i]);
+            i++;
+            while ((i + 1) < all_lines.size() && all_lines[i][0] != "0")
+            {
+                temp.push_back(all_lines[i]);
+                i++;
+            }
+            subsets.push_back(temp);
         }
     }
-
-    // print various functionalities
-    int i = 0;
-    for (auto const &x : Submitters)
+    for (int i = 0; i < subsets.size(); i++)
     {
-        cout << x.first << " : " << x.second->submitterName << endl;
-    }
-    cout << endl;
-    for (auto const &x : lines)
-    {
-        vector<vector<string>> slines = x.second;
-        cout << x.first << endl;
-        for (int i = 0; i < slines.size(); i++)
+        for (int j = 0; j < subsets[i].size(); j++)
         {
-            for (int j = 0; j < slines[i].size(); j++)
-                cout << slines[i][j] << " ";
+            for (int k = 0; k < subsets[i][j].size(); k++)
+            {
+                cout << subsets[i][j][k] << " ";
+            }
             cout << endl;
         }
+        cout << endl;
+        cout << "----------------------" << endl;
+        cout << endl;
     }
+    // print various functionalities
+    // int i = 0;
+    // for (auto const &x : Submitters)
+    // {
+    //     cout << x.first << " : " << x.second->submitterName << endl;
+    // }
+    // cout << endl;
+    // for (auto const &x : lines)
+    // {
+    //     vector<vector<string>> slines = x.second;
+    //     cout << x.first << endl;
+    //     for (int i = 0; i < slines.size(); i++)
+    //     {
+    //         for (int j = 0; j < slines[i].size(); j++)
+    //             cout << slines[i][j] << " ";
+    //         cout << endl;
+    //     }
+    // }
     cout << "Number of lines...:" << number_of_lines << endl;
 
     in.close();
