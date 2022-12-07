@@ -11,6 +11,7 @@ typedef enum cSet
 {
     ANSEL,
     UTF8,
+    UTF16,
     UNICODE,
     ASCII
 } CharSet;
@@ -22,6 +23,14 @@ typedef enum evSet
     DEAT
 } EventSet;
 
+typedef enum lSet
+{
+    English,
+    German,
+    French,
+    Japanese,
+    Spanish
+} LangSet;
 // for every id of an event, we might push it into map of id, object and use it to
 // grab data when we encounter a need call.
 
@@ -66,13 +75,20 @@ class CorpRecord
     }
     Address *addr;
 };
+class GEDCOMSource
+{
+public:
+    string id;
+    string version;
+    string name;
+};
 class Header
 {
 public:
     char source[256];
-    float gedcomVersion;
+    string gedcomVersion;
     CharSet encoding;
-    SourceRecord *src;
+    GEDCOMSource *gsrc;
     Submitter *submitter;
 };
 
@@ -97,7 +113,11 @@ vector<vector<string>> submitterLines;
 
 // stack having current parser tag and id of current tag
 stack<pair<string, string>> curr;
+
+// 3d vector of sets of lines of splitted strings
 vector<vector<vector<string>>> subsets;
+
+// vector of all strings
 vector<vector<string>> all_lines;
 
 void commentCheck(string s, Comment comment)
@@ -268,20 +288,52 @@ int main()
             subsets.push_back(temp);
         }
     }
+    // for (int i = 0; i < subsets.size(); i++)
+    // {
+    //     for (int j = 0; j < subsets[i].size(); j++)
+    //     {
+    //         for (int k = 0; k < subsets[i][j].size(); k++)
+    //         {
+    //             cout << subsets[i][j][k] << " ";
+    //         }
+    //         cout << endl;
+    //     }
+    //     cout << endl;
+    //     cout << "----------------------" << endl;
+    //     cout << endl;
+    // }
+    int header_main = 1;
     for (int i = 0; i < subsets.size(); i++)
     {
-        for (int j = 0; j < subsets[i].size(); j++)
+        if (subsets[i][0].size() == 2 && subsets[i][0][1] == "HEAD")
         {
-            for (int k = 0; k < subsets[i][j].size(); k++)
+            Header header;
+
+            for (int j = 0; j < subsets[i].size(); j++)
             {
-                cout << subsets[i][j][k] << " ";
+                if (subsets[i][j][1] == "VERS")
+                {
+                    header.gedcomVersion = subsets[i][j][2];
+                }
+                else if (subsets[i][j][1] == "CHAR")
+                {
+                    if (subsets[i][j][2] == "UTF-8")
+                        header.encoding = UTF8;
+                    else if (subsets[i][j][2] == "UNICODE")
+                        header.encoding = UNICODE;
+                    else if (subsets[i][j][2] == "ANSEL")
+                        header.encoding = ANSEL;
+                    else if (subsets[i][j][2] == "ASCII")
+                        header.encoding = ASCII;
+                    else if (subsets[i][j][2] == "UTF-16")
+                        header.encoding = UTF16;
+                    else
+                        throw invalid_argument("Invalid Encoding");
+                }
             }
-            cout << endl;
         }
-        cout << endl;
-        cout << "----------------------" << endl;
-        cout << endl;
     }
+
     // print various functionalities
     // int i = 0;
     // for (auto const &x : Submitters)
