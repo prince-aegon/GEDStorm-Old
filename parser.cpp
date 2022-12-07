@@ -40,6 +40,7 @@ Elements of header:
 class Submitter
 {
 public:
+    string id;
     string submitterName;
     Address *addr;
 };
@@ -105,7 +106,27 @@ vector<string> splitString(string s, string delimiter)
     return res;
 }
 map<string, Submitter *> Submitters;
+vector<string> submitterLines;
+stack<pair<string, string>> curr;
+string submitterId;
 
+void submTag(vector<string> submSplit)
+{
+    submitterLines.push_back(submSplit[1]);
+    string submitterId = submSplit[1];
+    Submitters.insert(make_pair(submSplit[1], new Submitter()));
+    Submitters[submitterId]->id = submitterId;
+    curr.push(make_pair("SUBM", submitterId));
+    cout << "passed submTag " << submitterId << endl;
+}
+void getName(vector<string> nameSplit, string submitterId)
+{
+    if (nameSplit[0] == "1" && nameSplit[1] == "NAME")
+    {
+        Submitters[submitterId]->submitterName = nameSplit[2];
+    }
+    curr.pop();
+}
 int main()
 {
     char c, fn[10];
@@ -123,33 +144,13 @@ int main()
         return 0;
     }
     int number_of_lines = 0;
-    vector<string> submitterLines;
-    stack<string> curr;
-    curr.push("NULL");
+    curr.push(make_pair("NULL", "@00@"));
     while (in.eof() == 0)
     {
 
         number_of_lines++;
         getline(in, s);
-        string submitterId;
-        vector<string> submSplit = splitString(s, " ");
-        if (submSplit.size() >= 3 && submSplit[0] == "0" && submSplit[2] == "SUBM")
-        {
-            submitterLines.push_back(submSplit[1]);
-            submitterId = submSplit[1];
-            Submitters.insert(make_pair(submSplit[1], new Submitter()));
-            curr.push("SUBM");
-        }
-        if (curr.top() == "SUBM")
-        {
-            getline(in, s);
-            vector<string> nameSplit = splitString(s, " ");
-            if (nameSplit[0] == "1" && nameSplit[1] == "NAME")
-            {
-                Submitters[submitterId]->submitterName = nameSplit[2];
-            }
-            curr.pop();
-        }
+
         // working on comments
         if (s[0] == '/' && s[1] == '/')
         {
@@ -177,11 +178,18 @@ int main()
                 }
             }
         }
+
+        vector<string> submSplit = splitString(s, " ");
+        if (submSplit.size() >= 3 && submSplit[0] == "0" && submSplit[2] == "SUBM")
+        {
+            submTag(submSplit);
+            continue;
+        }
+        if (curr.top().first == "SUBM")
+        {
+            getName(submSplit, curr.top().second);
+        }
     }
-    // for (int i = 0; i < submitterLines.size(); i++)
-    // {
-    //     Submitters.insert(make_pair(submitterLines[i], new Submitter()));
-    // }
     int i = 0;
     for (auto const &x : Submitters)
     {
