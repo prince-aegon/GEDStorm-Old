@@ -34,6 +34,7 @@ Elements of header:
 
 /*
  Submitter Record:
+    Id
     Name
     Address structure
 */
@@ -105,33 +106,108 @@ vector<string> splitString(string s, string delimiter)
     res.push_back(s.substr(pos_start));
     return res;
 }
+
+/*
+map : lines
+    stores all lines for a particular tag
+*/
+map<string, vector<vector<string>>> lines;
+
+// stores objects of submitter class with id as key
 map<string, Submitter *> Submitters;
-vector<string> submitterLines;
+
+// 2d vector to help in lines
+vector<vector<string>> submitterLines;
+
+// stack having current parser tag and id of current tag
 stack<pair<string, string>> curr;
-string submitterId;
 
 void submTag(vector<string> submSplit)
 {
-    submitterLines.push_back(submSplit[1]);
+
+    // push current subm line onto 2d vector to add to map
+    submitterLines.push_back(submSplit);
+
+    // check if subm tag already in lines map
+    if (lines.find("SUBM") == lines.end())
+        lines.insert(make_pair("SUBM", submitterLines));
+    else
+        lines["SUBM"] = submitterLines;
+
+    // store the id
     string submitterId = submSplit[1];
+
+    // create map for submitter object, to create multiple objects of submitter
+    // class
     Submitters.insert(make_pair(submSplit[1], new Submitter()));
+
+    // add id to object of current processing id
     Submitters[submitterId]->id = submitterId;
+
+    // push current state onto stack
     curr.push(make_pair("SUBM", submitterId));
-    cout << "passed submTag " << submitterId << endl;
 }
 void getName(vector<string> nameSplit, string submitterId)
 {
+
+    // process names
     if (nameSplit[0] == "1" && nameSplit[1] == "NAME")
     {
-        Submitters[submitterId]->submitterName = nameSplit[2];
+        string name;
+        for (int i = 2; i < nameSplit.size(); i++)
+        {
+            name = name + nameSplit[i] + " ";
+        }
+
+        // index id in submitter map and add name in the class object
+        Submitters[submitterId]->submitterName = name;
     }
+
+    // pop the current state from stack
     curr.pop();
+}
+pair<int, string> parseComments(string s, int number_of_lines, Comment cTYPE)
+{
+    string sanitised = "";
+    if (s[0] == '/' && s[1] == '/')
+    {
+        string commentString = s.substr(3, s.length() - 2);
+        cTYPE.commentType = "new-line";
+        cTYPE.commentLength = number_of_lines;
+        commentCheck(commentString, cTYPE);
+        sanitised = "null null null";
+    }
+    else
+    {
+        for (int i = 0; i < s.length(); i++)
+        {
+            if (s[i] == ' ' || s[i] == '\t')
+            {
+                if (s[i + 1] == '/' && s[i + 2] == '/')
+                {
+                    if (s[i] == ' ')
+                        cTYPE.commentType = "space-inline";
+                    else if (s[i] == '\t')
+                        cTYPE.commentType = "tab-inline";
+                    cTYPE.commentLength = number_of_lines;
+                    string commentString = s.substr(i + 4, s.length() - (i + 3));
+                    sanitised = s.substr(0, i);
+                    commentCheck(commentString, cTYPE);
+                }
+            }
+        }
+    }
+    if (sanitised == "")
+        return make_pair(0, sanitised);
+    else
+        return make_pair(1, sanitised);
 }
 int main()
 {
     char c, fn[10];
     string s;
     Comment cTYPE;
+
     if (FILE_NAME == "")
     {
         cout << "Enter the file name....:";
@@ -145,6 +221,7 @@ int main()
     }
     int number_of_lines = 0;
     curr.push(make_pair("NULL", "@00@"));
+
     while (in.eof() == 0)
     {
 
@@ -152,50 +229,46 @@ int main()
         getline(in, s);
 
         // working on comments
-        if (s[0] == '/' && s[1] == '/')
-        {
-            string commentString = s.substr(3, s.length() - 2);
-            cTYPE.commentType = "new-line";
-            cTYPE.commentLength = number_of_lines;
-            commentCheck(commentString, cTYPE);
-        }
-        else
-        {
-            for (int i = 0; i < s.length(); i++)
-            {
-                if (s[i] == ' ' || s[i] == '\t')
-                {
-                    if (s[i + 1] == '/' && s[i + 2] == '/')
-                    {
-                        if (s[i] == ' ')
-                            cTYPE.commentType = "space-inline";
-                        else if (s[i] == '\t')
-                            cTYPE.commentType = "tab-inline";
-                        cTYPE.commentLength = number_of_lines;
-                        string commentString = s.substr(i + 4, s.length() - (i + 3));
-                        commentCheck(commentString, cTYPE);
-                    }
-                }
-            }
-        }
+        pair<int, string> s1 = parseComments(s, number_of_lines, cTYPE);
+        // sanitise all comments
+        if (s1.first == 1)
+            s = s1.second;
 
-        vector<string> submSplit = splitString(s, " ");
-        if (submSplit.size() >= 3 && submSplit[0] == "0" && submSplit[2] == "SUBM")
+        // split current line
+        vector<string> split = splitString(s, " ");
+
+        // process subm tag
+        if (split.size() >= 3 && split[0] == "0" && split[2] == "SUBM")
         {
-            submTag(submSplit);
+            submTag(split);
             continue;
         }
+
+        // get name for subm tag
         if (curr.top().first == "SUBM")
         {
-            getName(submSplit, curr.top().second);
+            getName(split, curr.top().second);
         }
     }
+
+    // print various functionalities
     int i = 0;
     for (auto const &x : Submitters)
     {
         cout << x.first << " : " << x.second->submitterName << endl;
     }
-
+    cout << endl;
+    for (auto const &x : lines)
+    {
+        vector<vector<string>> slines = x.second;
+        cout << x.first << endl;
+        for (int i = 0; i < slines.size(); i++)
+        {
+            for (int j = 0; j < slines[i].size(); j++)
+                cout << slines[i][j] << " ";
+            cout << endl;
+        }
+    }
     cout << "Number of lines...:" << number_of_lines << endl;
 
     in.close();

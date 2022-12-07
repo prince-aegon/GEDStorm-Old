@@ -1,6 +1,7 @@
 0 HEAD
 1 GEDC
-2 VERS 5.5.5
+2 VERS 5.5.5 // jashjas
+// jsah s
 2 FORM LINEAGE-LINKED
 3 VERS 5.5.5
 1 CHAR UTF-8
@@ -10,14 +11,15 @@
 2 CORP gedcom.org
 3 ADDR
 4 CITY LEIDEN
-3 WWW www.gedcom.org
+3 WWW www.gedcom.org    // sas
+// jisaisi
 1 DATE 2 Oct 2019
 2 TIME 0:00:00
 1 FILE 555Sample.ged
 1 LANG English
 1 SUBM @U1@
 0 @U1@ SUBM
-1 NAME Reldon Poulson
+1 NAME Reldon Poulson Senior // CHECK
 1 ADDR 
 2 ADR1 1900 43rd Street West
 2 CITY Billings
