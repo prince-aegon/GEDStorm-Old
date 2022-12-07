@@ -1,9 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <vector>
+#include <stack>
 #include "address.h"
 using namespace std;
-#define FILE_NAME "Basic.ged"
+#define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/submitter.ged"
 
 typedef enum cSet
 {
@@ -23,13 +25,23 @@ typedef enum evSet
 // for every id of an event, we might push it into map of id, object and use it to
 // grab data when we encounter a need call.
 
-// Submitter Record
+/*
+Elements of header:
+1. version, charser, form
+2. source record
+
+*/
+
+/*
+ Submitter Record:
+    Name
+    Address structure
+*/
 class Submitter
 {
 public:
-    char submitterName[64];
+    string submitterName;
     Address *addr;
-    map<string, string> details;
 };
 
 // Source Record
@@ -40,7 +52,18 @@ public:
     string date;
     string relInfo1[4];
 };
-
+class CorpRecord
+{
+    string id;
+    string name;
+    string website;
+    string version;
+    CorpRecord(string id)
+    {
+        this->id = id;
+    }
+    Address *addr;
+};
 class Header
 {
 public:
@@ -65,6 +88,24 @@ void commentCheck(string s, Comment comment)
     cout << "line no : " << comment.commentLength << endl
          << endl;
 }
+vector<string> splitString(string s, string delimiter)
+{
+    size_t pos_start = 0, pos_end, delim_len = delimiter.length();
+    string token;
+    vector<string> res;
+
+    while ((pos_end = s.find(delimiter, pos_start)) != string::npos)
+    {
+        token = s.substr(pos_start, pos_end - pos_start);
+        pos_start = pos_end + delim_len;
+        res.push_back(token);
+    }
+
+    res.push_back(s.substr(pos_start));
+    return res;
+}
+map<string, Submitter *> Submitters;
+
 int main()
 {
     char c, fn[10];
@@ -82,11 +123,33 @@ int main()
         return 0;
     }
     int number_of_lines = 0;
+    vector<string> submitterLines;
+    stack<string> curr;
+    curr.push("NULL");
     while (in.eof() == 0)
     {
+
         number_of_lines++;
         getline(in, s);
-
+        string submitterId;
+        vector<string> submSplit = splitString(s, " ");
+        if (submSplit.size() >= 3 && submSplit[0] == "0" && submSplit[2] == "SUBM")
+        {
+            submitterLines.push_back(submSplit[1]);
+            submitterId = submSplit[1];
+            Submitters.insert(make_pair(submSplit[1], new Submitter()));
+            curr.push("SUBM");
+        }
+        if (curr.top() == "SUBM")
+        {
+            getline(in, s);
+            vector<string> nameSplit = splitString(s, " ");
+            if (nameSplit[0] == "1" && nameSplit[1] == "NAME")
+            {
+                Submitters[submitterId]->submitterName = nameSplit[2];
+            }
+            curr.pop();
+        }
         // working on comments
         if (s[0] == '/' && s[1] == '/')
         {
@@ -114,6 +177,15 @@ int main()
                 }
             }
         }
+    }
+    // for (int i = 0; i < submitterLines.size(); i++)
+    // {
+    //     Submitters.insert(make_pair(submitterLines[i], new Submitter()));
+    // }
+    int i = 0;
+    for (auto const &x : Submitters)
+    {
+        cout << x.first << " : " << x.second->submitterName << endl;
     }
 
     cout << "Number of lines...:" << number_of_lines << endl;

@@ -45,6 +45,15 @@
 1 RESI 
 2 DATE from 1900 to 1905
 0 @I2@ INDI
+0 @U2@ SUBM
+1 NAME sarthak jha
+1 ADDR 
+2 ADR1 new york, infia
+2 CITY nyc
+2 STAE new york state
+2 POST 328738
+2 CTRY United States of America
+1 PHON +1 (406) 728-72187
 1 NAME Mary Ann /Wilson/
 2 SURN Wilson
 2 GIVN Mary Ann
