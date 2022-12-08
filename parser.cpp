@@ -6,7 +6,11 @@
 #include "address.h"
 using namespace std;
 #define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/submitter.ged"
+// #define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/Shakespeare.ged"
+// #define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/The English and British Kings and Queens.ged"
+
 #define regexCOUT "\w*(?<!:)cout"
+
 typedef enum cSet
 {
     ANSEL = 0,
@@ -324,7 +328,6 @@ int main()
     //  }
 
     // parse all submitters
-
     // start processing header
     int header_main = 1;
     Submitter header_submitter;
@@ -493,6 +496,7 @@ int main()
         if (subsets[i][0].size() > 2 && subsets[i][0][2] == "INDI")
         {
             // if block is individual then insert object into ds
+            cout << "Working on ...:" << subsets[i][0][1] << endl;
             Individuals.insert(make_pair(subsets[i][0][1], new Individual()));
             Individuals[subsets[i][0][1]]->id = subsets[i][0][1];
             for (int j = 0; j < subsets[i].size(); j++)
@@ -525,7 +529,7 @@ int main()
                     else if (subsets[i][j][2] == "F")
                         Individuals[subsets[i][0][1]]->sex = 'F';
                     else
-                        throw invalid_argument("Invalid Sex Value");
+                        throw invalid_argument("Invalid Sex Value for individual with id : " + subsets[i][0][1]);
                 }
             }
         }
