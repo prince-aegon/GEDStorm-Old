@@ -93,6 +93,15 @@ public:
     string commentType;
     int commentLength;
 };
+class Individual
+{
+public:
+    string id;
+    string name;
+    string srname;
+    string givname;
+    char sex;
+};
 
 /*
 map : lines
@@ -114,6 +123,9 @@ vector<vector<vector<string>>> subsets;
 
 // vector of all strings
 vector<vector<string>> all_lines;
+
+// data structure for individuals
+map<string, Individual *> Individuals;
 
 void commentCheck(string s, Comment comment)
 {
@@ -294,20 +306,22 @@ int main()
             subsets.push_back(temp);
         }
     }
-    // for (int i = 0; i < subsets.size(); i++)
-    // {
-    //     for (int j = 0; j < subsets[i].size(); j++)
-    //     {
-    //         for (int k = 0; k < subsets[i][j].size(); k++)
-    //         {
-    //             std::std::cout << subsets[i][j][k] << " ";
-    //         }
-    //         std::std::cout << endl;
-    //     }
-    //     std::std::cout << endl;
-    //     std::std::cout << "----------------------" << endl;
-    //     std::std::cout << endl;
-    // }
+
+    // print all the blocks
+    //  for (int i = 0; i < subsets.size(); i++)
+    //  {
+    //      for (int j = 0; j < subsets[i].size(); j++)
+    //      {
+    //          for (int k = 0; k < subsets[i][j].size(); k++)
+    //          {
+    //              std::cout << subsets[i][j][k] << " ";
+    //          }
+    //          std::cout << endl;
+    //      }
+    //      std::cout << endl;
+    //      std::cout << "----------------------" << endl;
+    //      std::cout << endl;
+    //  }
 
     // parse all submitters
 
@@ -469,6 +483,63 @@ int main()
     //         std::std::cout << endl;
     //     }
     // }
+
+    // parse all individuals
+
+    // iterate through all blocks
+    for (int i = 0; i < subsets.size(); i++)
+    {
+        // check if the block is an individual
+        if (subsets[i][0].size() > 2 && subsets[i][0][2] == "INDI")
+        {
+            // if block is individual then insert object into ds
+            Individuals.insert(make_pair(subsets[i][0][1], new Individual()));
+            Individuals[subsets[i][0][1]]->id = subsets[i][0][1];
+            for (int j = 0; j < subsets[i].size(); j++)
+            {
+                if (subsets[i][j][1] == "NAME")
+                {
+                    string name = "";
+                    for (int k = 2; k < subsets[i][j].size(); k++)
+                    {
+                        // sanitise name
+                        if (subsets[i][j][k][0] == '/')
+                            name += subsets[i][j][k].substr(1, (subsets[i][j][k]).size() - 2);
+                        else
+                            name += subsets[i][j][k] + " ";
+                    }
+                    Individuals[subsets[i][0][1]]->name = name;
+                }
+                else if (subsets[i][j][1] == "SURN")
+                {
+                    Individuals[subsets[i][0][1]]->srname = subsets[i][j][2];
+                }
+                else if (subsets[i][j][1] == "GIVN")
+                {
+                    Individuals[subsets[i][0][1]]->givname = subsets[i][j][2];
+                }
+                else if (subsets[i][j][1] == "SEX")
+                {
+                    if (subsets[i][j][2] == "M")
+                        Individuals[subsets[i][0][1]]->sex = 'M';
+                    else if (subsets[i][j][2] == "F")
+                        Individuals[subsets[i][0][1]]->sex = 'F';
+                    else
+                        throw invalid_argument("Invalid Sex Value");
+                }
+            }
+        }
+    }
+    for (auto &x : Individuals)
+    {
+        cout << "Id of Individual : " << x.second->id << endl;
+        cout << "Name of Individual : " << x.second->name << endl;
+        cout << "Surname of Individual : " << x.second->srname << endl;
+        cout << "GivenName of Individual : " << x.second->givname << endl;
+        cout << "Sex of Individual : " << x.second->sex << endl;
+        cout << endl;
+    }
+    cout << "Total number of individuals : " << Individuals.size() << endl;
     std::cout
         << "Number of lines...:" << number_of_lines << endl;
 
