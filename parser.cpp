@@ -6,30 +6,30 @@
 #include "address.h"
 using namespace std;
 #define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/submitter.ged"
-
+#define regexCOUT "\w*(?<!:)cout"
 typedef enum cSet
 {
-    ANSEL,
-    UTF8,
-    UTF16,
-    UNICODE,
-    ASCII
+    ANSEL = 0,
+    UTF8 = 1,
+    UTF16 = 2,
+    UNICODE = 3,
+    ASCII = 4
 } CharSet;
 
 typedef enum evSet
 {
-    BIRT,
-    MARR,
-    DEAT
+    BIRT = 0,
+    MARR = 1,
+    DEAT = 2
 } EventSet;
 
 typedef enum lSet
 {
-    English,
-    German,
-    French,
-    Japanese,
-    Spanish
+    English = 0,
+    German = 1,
+    French = 2,
+    Japanese = 3,
+    Spanish = 4
 } LangSet;
 // for every id of an event, we might push it into map of id, object and use it to
 // grab data when we encounter a need call.
@@ -65,6 +65,7 @@ public:
 };
 class CorpRecord
 {
+public:
     string id;
     string name;
     string website;
@@ -75,21 +76,15 @@ class CorpRecord
     }
     Address *addr;
 };
-class GEDCOMSource
-{
-public:
-    string id;
-    string version;
-    string name;
-};
 class Header
 {
 public:
     char source[256];
     string gedcomVersion;
+    string formType;
     CharSet encoding;
-    GEDCOMSource *gsrc;
-    Submitter *submitter;
+    LangSet language;
+    CorpRecord *corp;
 };
 
 class Comment
@@ -122,10 +117,10 @@ vector<vector<string>> all_lines;
 
 void commentCheck(string s, Comment comment)
 {
-    cout << "Type    : " << comment.commentType << endl;
-    cout << "comment : " << s << endl;
-    cout << "line no : " << comment.commentLength << endl
-         << endl;
+    std::cout << "Type    : " << comment.commentType << endl;
+    std::cout << "comment : " << s << endl;
+    std::cout << "line no : " << comment.commentLength << endl
+              << endl;
 }
 vector<string> splitString(string s, string delimiter)
 {
@@ -232,17 +227,25 @@ int main()
 
     if (FILE_NAME == "")
     {
-        cout << "Enter the file name....:";
+        std::cout << "Enter the file name....:";
         cin >> fn;
     }
     ifstream in(FILE_NAME);
     if (!in)
     {
-        cout << "Error! File Does not Exist";
+        std::cout << "Error! File Does not Exist";
         return 0;
+    }
+    else
+    {
+        std::cout << "Loading File...:" << endl;
     }
     int number_of_lines = 0;
     curr.push(make_pair("NULL", "@00@"));
+    cout << endl;
+    cout << "Parsing Start" << endl;
+    cout << "Printing Comments..." << endl;
+    cout << "-------------------------------" << endl;
 
     while (in.eof() == 0)
     {
@@ -251,6 +254,7 @@ int main()
         getline(in, s);
 
         // working on comments
+
         pair<int, string> s1 = parseComments(s, number_of_lines, cTYPE);
         // sanitise all comments
         if (s1.first == 1)
@@ -273,6 +277,8 @@ int main()
         //     getName(split, curr.top().second);
         // }
     }
+    cout << "-------------------------------" << endl;
+    cout << endl;
     for (int i = 0; i < all_lines.size();)
     {
         if (all_lines[i][0] == "0")
@@ -294,65 +300,177 @@ int main()
     //     {
     //         for (int k = 0; k < subsets[i][j].size(); k++)
     //         {
-    //             cout << subsets[i][j][k] << " ";
+    //             std::std::cout << subsets[i][j][k] << " ";
     //         }
-    //         cout << endl;
+    //         std::std::cout << endl;
     //     }
-    //     cout << endl;
-    //     cout << "----------------------" << endl;
-    //     cout << endl;
+    //     std::std::cout << endl;
+    //     std::std::cout << "----------------------" << endl;
+    //     std::std::cout << endl;
     // }
-    int header_main = 1;
-    for (int i = 0; i < subsets.size(); i++)
-    {
-        if (subsets[i][0].size() == 2 && subsets[i][0][1] == "HEAD")
-        {
-            Header header;
 
-            for (int j = 0; j < subsets[i].size(); j++)
+    // parse all submitters
+
+    // start processing header
+    int header_main = 1;
+    Submitter header_submitter;
+    Header header;
+    CorpRecord corp("0");
+    Address addrCorp;
+    header.corp = &corp;
+    int i = 0; // indexing the first set that is header
+
+    // start from first line
+    if (subsets[i][0].size() == 2 && subsets[i][0][1] == "HEAD")
+    {
+        // init header object
+        int j = 0, k = 0, submp = 0;
+
+        // iterate through lines of header
+        for (j = 0; j < subsets[i].size(); j++)
+        {
+
+            // extract version info
+            // header main to keep diff bw gedcom version and software version
+            if (subsets[i][j][1] == "VERS" && header_main == 1)
             {
-                if (subsets[i][j][1] == "VERS")
-                {
-                    header.gedcomVersion = subsets[i][j][2];
-                }
-                else if (subsets[i][j][1] == "CHAR")
-                {
-                    if (subsets[i][j][2] == "UTF-8")
-                        header.encoding = UTF8;
-                    else if (subsets[i][j][2] == "UNICODE")
-                        header.encoding = UNICODE;
-                    else if (subsets[i][j][2] == "ANSEL")
-                        header.encoding = ANSEL;
-                    else if (subsets[i][j][2] == "ASCII")
-                        header.encoding = ASCII;
-                    else if (subsets[i][j][2] == "UTF-16")
-                        header.encoding = UTF16;
-                    else
-                        throw invalid_argument("Invalid Encoding");
-                }
+                header.gedcomVersion = subsets[i][j][2];
+                header_main = 0;
+            }
+
+            // charset info
+            else if (subsets[i][j][1] == "CHAR")
+            {
+                if (subsets[i][j][2] == "UTF-8")
+                    header.encoding = UTF8;
+                else if (subsets[i][j][2] == "UNICODE")
+                    header.encoding = UNICODE;
+                else if (subsets[i][j][2] == "ANSEL")
+                    header.encoding = ANSEL;
+                else if (subsets[i][j][2] == "ASCII")
+                    header.encoding = ASCII;
+                else if (subsets[i][j][2] == "UTF-16")
+                    header.encoding = UTF16;
+                else
+                    throw invalid_argument("Invalid Encoding");
+            }
+
+            // form info
+            else if (subsets[i][j][1] == "FORM")
+            {
+                header.formType = subsets[i][j][2];
+            }
+
+            // source software info
+            else if (subsets[i][j][1] == "SOUR")
+            {
+                curr.push(make_pair("SOUR", subsets[i][j][2]));
+                k = j;
+            }
+
+            // submitter id object made
+            else if (subsets[i][j].size() > 2 && subsets[i][j][1] == "SUBM")
+            {
+                header_submitter.id = subsets[i][j][1];
+            }
+
+            // lang info
+            else if (subsets[i][j][1] == "LANG")
+            {
+                if (subsets[i][j][2] == "English")
+                    header.language = English;
+                else if (subsets[i][j][2] == "German")
+                    header.language = German;
             }
         }
-    }
 
+        // start parsing source software
+        if (curr.top().first == "SOUR")
+        {
+            // std::cout << "in sour" << endl;
+            // parse corp record in object
+            corp.id = (curr.top().second);
+
+            for (k = k; k < subsets[i].size(); k++, j++)
+            {
+                if (subsets[i][k][1] == "NAME")
+                {
+                    corp.name = subsets[i][k][2];
+                }
+                else if (subsets[i][k][1] == "VERS")
+                {
+                    corp.version = subsets[i][k][2];
+                }
+                else if (subsets[i][k][1] == "CITY")
+                {
+                    addrCorp.city = subsets[i][k][2];
+                }
+                else if (subsets[i][k][1] == "CTRY")
+                {
+                    addrCorp.country = subsets[i][k][2];
+                }
+                else if (subsets[i][k][1] == "POST")
+                {
+                    addrCorp.post = subsets[i][k][2];
+                }
+                else if (subsets[i][k][1] == "WWW")
+                {
+                    corp.website = subsets[i][k][2];
+                }
+                corp.addr = &addrCorp;
+            }
+            curr.pop();
+        }
+
+        // if (split.size() >= 3 && split[0] == "0" && split[2] == "SUBM")
+        // {
+        //     submTag(split);
+        //     continue;
+        // }
+
+        // // get name for subm tag
+        // if (curr.top().first == "SUBM")
+        // {
+        //     getName(split, curr.top().second);
+        // }
+    }
+    for (int i = 0; i < 2; i++)
+        cout << endl;
+    std::cout << "Parsing Header info...:" << endl;
+    cout << "-------------------------------" << endl;
+    cout << endl;
+    std::cout << "Header version   : " << header.gedcomVersion << endl;
+    std::cout << "Header encoding  : " << header.encoding << endl;
+    std::cout << "Header form type : " << header.formType << endl;
+    std::cout << "Header  Language : " << header.language << endl;
+    std::cout << "Header corp      : " << header.corp->id << endl;
+    std::cout << "Header corp name : " << header.corp->name << endl;
+    std::cout << "Header corp city : " << header.corp->addr->city << endl;
+    std::cout << "Header corp web  : " << header.corp->website << endl;
+    std::cout << "Header corp vers : " << header.corp->version << endl;
+    cout << endl;
+    cout << "-------------------------------" << endl;
+    cout << endl;
     // print various functionalities
     // int i = 0;
     // for (auto const &x : Submitters)
     // {
-    //     cout << x.first << " : " << x.second->submitterName << endl;
+    //     std::std::cout << x.first << " : " << x.second->submitterName << endl;
     // }
-    // cout << endl;
+    // std::std::cout << endl;
     // for (auto const &x : lines)
     // {
     //     vector<vector<string>> slines = x.second;
-    //     cout << x.first << endl;
+    //     std::std::cout << x.first << endl;
     //     for (int i = 0; i < slines.size(); i++)
     //     {
     //         for (int j = 0; j < slines[i].size(); j++)
-    //             cout << slines[i][j] << " ";
-    //         cout << endl;
+    //             std::std::cout << slines[i][j] << " ";
+    //         std::std::cout << endl;
     //     }
     // }
-    cout << "Number of lines...:" << number_of_lines << endl;
+    std::cout
+        << "Number of lines...:" << number_of_lines << endl;
 
     in.close();
 

@@ -22,5 +22,4 @@ clean:
 
 dist-clean: clean
 	rm -f *~ .depend
-
 include .depend
