@@ -20,4 +20,4 @@ A parser in C++ for GEDCOM 5.5.5 Files.
 
 - Process and correct error on the fly
 - Use a database to retrieve information for future calls
-- Build a PDF based report of the file
+- Remove irrelevant and redundant data from the GEDCOM file before parsing
