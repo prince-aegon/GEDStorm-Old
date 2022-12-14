@@ -97,6 +97,7 @@ public:
     string commentType;
     int commentLength;
 };
+class Family;
 class Individual
 {
 public:
@@ -107,7 +108,7 @@ public:
     char sex;
 
     // stores all the families inividual is part of based on c or s
-    // map<char, vector<Family>> mpFamilies;
+    map<char, vector<Family>> mpFamilies;
 };
 
 class Family
