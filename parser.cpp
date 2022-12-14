@@ -105,8 +105,19 @@ public:
     string srname;
     string givname;
     char sex;
+
+    // stores all the families inividual is part of based on c or s
+    // map<char, vector<Family>> mpFamilies;
 };
 
+class Family
+{
+public:
+    string id;
+    Individual husband;
+    Individual wife;
+    vector<Individual> children;
+};
 /*
 map : lines
     stores all lines for a particular tag
@@ -130,6 +141,9 @@ vector<vector<string>> all_lines;
 
 // data structure for individuals
 map<string, Individual *> Individuals;
+
+// data structure for families
+map<string, Family *> Families;
 
 void commentCheck(string s, Comment comment)
 {
@@ -488,15 +502,20 @@ int main()
     // }
 
     // parse all individuals
-
+    cout << endl;
+    cout << "----------------------------------------- " << endl;
+    cout << endl;
+    cout << "Individual details : " << endl;
+    cout << endl;
     // iterate through all blocks
     for (int i = 0; i < subsets.size(); i++)
     {
         // check if the block is an individual
+        vector<Family> fm;
         if (subsets[i][0].size() > 2 && subsets[i][0][2] == "INDI")
         {
             // if block is individual then insert object into ds
-            cout << "Working on ...:" << subsets[i][0][1] << endl;
+            // cout << "Working on ...:" << subsets[i][0][1] << endl;
             Individuals.insert(make_pair(subsets[i][0][1], new Individual()));
             Individuals[subsets[i][0][1]]->id = subsets[i][0][1];
             for (int j = 0; j < subsets[i].size(); j++)
@@ -504,7 +523,7 @@ int main()
                 if (subsets[i][j][1] == "NAME")
                 {
                     string name = "";
-                    for (int k = 2; k < subsets[i][j].size(); k++)
+                    for (int k = 2; k < int(subsets[i][j].size()); k++)
                     {
                         // sanitise name
                         if (subsets[i][j][k][0] == '/')
@@ -531,22 +550,76 @@ int main()
                     else
                         throw invalid_argument("Invalid Sex Value for individual with id : " + subsets[i][0][1]);
                 }
+                else if (subsets[i][j][1] == "FAMS")
+                {
+                    // fm.push_back(nullptr);
+                    // Individuals[subsets[i][0][1]]->mpFamilies.insert(make_pair('C', ))
+                }
             }
         }
     }
     for (auto &x : Individuals)
     {
-        cout << "Id of Individual : " << x.second->id << endl;
-        cout << "Name of Individual : " << x.second->name << endl;
-        cout << "Surname of Individual : " << x.second->srname << endl;
+        cout << "Id of Individual        : " << x.second->id << endl;
+        cout << "Name of Individual      : " << x.second->name << endl;
+        cout << "Surname of Individual   : " << x.second->srname << endl;
         cout << "GivenName of Individual : " << x.second->givname << endl;
-        cout << "Sex of Individual : " << x.second->sex << endl;
-        cout << endl;
+        cout << "Sex of Individual       : " << x.second->sex << endl;
+        std::cout << endl;
     }
     cout << "Total number of individuals : " << Individuals.size() << endl;
+    cout << endl;
+    cout << "----------------------------------------- " << endl;
+    cout << endl;
+    cout << "Family details : " << endl;
+    cout << endl;
+    // parsing families
+    for (int i = 0; i < subsets.size(); i++)
+    {
+        vector<Individual> children_in;
+        if (subsets[i][0].size() > 2 && subsets[i][0][2] == "FAM")
+        {
+            Families.insert(make_pair(subsets[i][0][1], new Family()));
+            Families[subsets[i][0][1]]->id = subsets[i][0][1];
+            for (int j = 0; j < subsets[i].size(); j++)
+            {
+                if (subsets[i][j][1] == "HUSB")
+                {
+                    Families[subsets[i][0][1]]->husband = *Individuals[subsets[i][j][2]];
+                }
+                else if (subsets[i][j][1] == "WIFE")
+                {
+                    Families[subsets[i][0][1]]->wife = *Individuals[subsets[i][j][2]];
+                }
+                else if (subsets[i][j][1] == "CHIL")
+                {
+                    children_in.push_back(*Individuals[subsets[i][j][2]]);
+                    Families[subsets[i][0][1]]->children = children_in;
+                }
+            }
+        }
+    }
+    for (auto &x : Families)
+    {
+        cout << "Id of family              : " << x.second->id << endl;
+        cout << "Husband in the family     : " << x.second->husband.name << endl;
+        cout << "Wife in the family family : " << x.second->wife.name << endl;
+        vector<Individual> ListChildren = x.second->children;
+        cout << "Children in the family    : ";
+        int NumberChildren = x.second->children.size();
+        for (auto &c : ListChildren)
+        {
+            if (NumberChildren-- == 1)
+                cout << c.name;
+            else
+                cout << c.name << " ,";
+        }
+        std::cout << endl;
+        cout << endl;
+    }
+    cout << "Total number of Families  : " << Families.size() << endl;
     std::cout
         << "Number of lines...:" << number_of_lines << endl;
-
     in.close();
 
     return 0;
