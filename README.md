@@ -13,6 +13,8 @@ A parser in C++ for GEDCOM 5.5.5 Files.
 
 ## TODO
 
+- Create modes to run based on user
+- Calculate ages of individuals during events
 - Process errors in file and display them appropriately
 - GUI Interface to display families and other data in a readable form
 

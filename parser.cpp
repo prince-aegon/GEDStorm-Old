@@ -146,6 +146,9 @@ map<string, Individual *> Individuals;
 // data structure for families
 map<string, Family *> Families;
 
+// debugger details
+vector<pair<int, string>> debugger;
+
 void commentCheck(string s, Comment comment)
 {
     std::cout << "Type    : " << comment.commentType << endl;
@@ -250,8 +253,26 @@ pair<int, string> parseComments(string s, int number_of_lines, Comment cTYPE)
     else
         return make_pair(1, sanitised);
 }
-int main()
+
+int getLine(int m, int n)
 {
+    int ans = 0;
+    for (int i = 0; i < m; i++)
+    {
+        ans += subsets[i].size();
+    }
+    ans += n;
+    return ans + 1;
+}
+
+int main(int argc, char **argv)
+{
+
+    // implement custom flags
+    // -d -> debugger mode
+    // -f -> full mode
+    // -s -> short mode
+
     char c, fn[10];
     string s;
     Comment cTYPE;
@@ -309,6 +330,9 @@ int main()
         // }
     }
     cout << "-------------------------------" << endl;
+
+    std::cout
+        << "Number of lines...:" << number_of_lines << endl;
     cout << endl;
     for (int i = 0; i < all_lines.size();)
     {
@@ -550,7 +574,9 @@ int main()
                         Individuals[subsets[i][0][1]]->sex = 'F';
                     else
                     {
-                        cout << Individuals[subsets[i][0][1]]->name << " has invalid sex value" << endl;
+                        string debug = Individuals[subsets[i][0][1]]->name + " has invalid sex value";
+                        debugger.push_back(make_pair(getLine(i, j), debug));
+                        // cout << Individuals[subsets[i][0][1]]->name << " has invalid sex value" << endl;
                         // throw invalid_argument("Invalid Sex Value for individual with id : " + subsets[i][0][1]);
                     }
                 }
@@ -622,8 +648,16 @@ int main()
         cout << endl;
     }
     cout << "Total number of Families  : " << Families.size() << endl;
-    std::cout
-        << "Number of lines...:" << number_of_lines << endl;
+    cout << "----------------------------------" << endl;
+    cout << "Printing debugger info : " << endl;
+    cout << endl;
+    for (int i = 0; i < debugger.size(); i++)
+    {
+        cout << i + 1 << ". "
+             << "Line " << debugger[i].first << " : " << debugger[i].second << endl;
+    }
+    cout << endl;
+
     in.close();
 
     return 0;
