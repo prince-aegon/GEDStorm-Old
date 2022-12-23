@@ -5,8 +5,8 @@
 #include <stack>
 #include "address.h"
 using namespace std;
-#define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/submitter.ged"
-// #define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/Shakespeare.ged"
+// #define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/submitter.ged"
+#define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/Shakespeare.ged"
 // #define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/The English and British Kings and Queens.ged"
 
 #define regexCOUT "\w*(?<!:)cout"
@@ -549,7 +549,10 @@ int main()
                     else if (subsets[i][j][2] == "F")
                         Individuals[subsets[i][0][1]]->sex = 'F';
                     else
-                        throw invalid_argument("Invalid Sex Value for individual with id : " + subsets[i][0][1]);
+                    {
+                        cout << Individuals[subsets[i][0][1]]->name << " has invalid sex value" << endl;
+                        // throw invalid_argument("Invalid Sex Value for individual with id : " + subsets[i][0][1]);
+                    }
                 }
                 else if (subsets[i][j][1] == "FAMS")
                 {
