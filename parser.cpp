@@ -265,7 +265,7 @@ int getLine(int m, int n)
     return ans + 1;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
 
     // implement custom flags
@@ -273,6 +273,10 @@ int main(int argc, char **argv)
     // -f -> full mode
     // -s -> short mode
 
+    char mode;
+    // cout << argc << argv[0] << argv[1] << endl;
+    if (argv[1] == "-d")
+        std::cout << "debug mode" << endl;
     char c, fn[10];
     string s;
     Comment cTYPE;
