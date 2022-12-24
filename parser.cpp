@@ -3,13 +3,14 @@
 #include <map>
 #include <vector>
 #include <stack>
+#include <regex>
 #include "address.h"
 using namespace std;
 // #define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/submitter.ged"
 #define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/Shakespeare.ged"
 // #define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/The English and British Kings and Queens.ged"
 
-#define regexCOUT "\w*(?<!:)cout"
+#define regex_cout "\w*(?<!:)std::cout"
 
 typedef enum cSet
 {
@@ -107,6 +108,8 @@ public:
     string givname;
     char sex;
 
+    int birthYear;
+    int deathYear;
     // stores all the families inividual is part of based on c or s
     map<char, vector<Family>> mpFamilies;
 };
@@ -119,11 +122,21 @@ public:
     Individual wife;
     vector<Individual> children;
 };
+
+class Date
+{
+public:
+    int date;
+    string month;
+    int year;
+};
+
 /*
 map : lines
     stores all lines for a particular tag
 */
-map<string, vector<vector<string>>> lines;
+map<string, vector<vector<string>>>
+    lines;
 
 // stores objects of submitter class with id as key
 map<string, Submitter *> Submitters;
@@ -265,6 +278,27 @@ int getLine(int m, int n)
     return ans + 1;
 }
 
+Date parseDate(vector<string> date)
+{
+    Date nDate;
+    nDate.date = 0;
+    nDate.month = "None";
+    nDate.year = 0;
+    // regex to check if first is date
+    std::regex reDate("^[0-9]{2}$");
+    std::regex reYear("^[0-9]{4}$");
+    // for (int i = 0; i < date.size(); i++)
+    //     cout << date[i] << " ";
+    // cout << endl;
+    if (std::regex_match(date[0], reDate) && std::regex_match(date[date.size() - 1], reYear))
+    {
+        cout << "here" << endl;
+        nDate.date = stoi(date[0]);
+        nDate.year = stoi(date[date.size() - 1]);
+    }
+    return nDate;
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -274,7 +308,7 @@ int main(int argc, char *argv[])
     // -s -> short mode
 
     char mode;
-    // cout << argc << argv[0] << argv[1] << endl;
+    // std::cout << argc << argv[0] << argv[1] << endl;
     if (argv[1] == "-d")
         std::cout << "debug mode" << endl;
     char c, fn[10];
@@ -298,10 +332,10 @@ int main(int argc, char *argv[])
     }
     int number_of_lines = 0;
     curr.push(make_pair("NULL", "@00@"));
-    cout << endl;
-    cout << "Parsing Start" << endl;
-    cout << "Printing Comments..." << endl;
-    cout << "-------------------------------" << endl;
+    std::cout << endl;
+    std::cout << "Parsing Start" << endl;
+    std::cout << "Printing Comments..." << endl;
+    std::cout << "-------------------------------" << endl;
 
     while (in.eof() == 0)
     {
@@ -333,11 +367,11 @@ int main(int argc, char *argv[])
         //     getName(split, curr.top().second);
         // }
     }
-    cout << "-------------------------------" << endl;
+    std::cout << "-------------------------------" << endl;
 
     std::cout
         << "Number of lines...:" << number_of_lines << endl;
-    cout << endl;
+    std::cout << endl;
     for (int i = 0; i < all_lines.size();)
     {
         if (all_lines[i][0] == "0")
@@ -495,10 +529,10 @@ int main(int argc, char *argv[])
         // }
     }
     for (int i = 0; i < 2; i++)
-        cout << endl;
+        std::cout << endl;
     std::cout << "Parsing Header info...:" << endl;
-    cout << "-------------------------------" << endl;
-    cout << endl;
+    std::cout << "-------------------------------" << endl;
+    std::cout << endl;
     std::cout << "Header version   : " << header.gedcomVersion << endl;
     std::cout << "Header encoding  : " << header.encoding << endl;
     std::cout << "Header form type : " << header.formType << endl;
@@ -508,9 +542,9 @@ int main(int argc, char *argv[])
     std::cout << "Header corp city : " << header.corp->addr->city << endl;
     std::cout << "Header corp web  : " << header.corp->website << endl;
     std::cout << "Header corp vers : " << header.corp->version << endl;
-    cout << endl;
-    cout << "-------------------------------" << endl;
-    cout << endl;
+    std::cout << endl;
+    std::cout << "-------------------------------" << endl;
+    std::cout << endl;
     // print various functionalities
     // int i = 0;
     // for (auto const &x : Submitters)
@@ -531,12 +565,13 @@ int main(int argc, char *argv[])
     // }
 
     // parse all individuals
-    cout << endl;
-    cout << "----------------------------------------- " << endl;
-    cout << endl;
-    cout << "Individual details : " << endl;
-    cout << endl;
+    std::cout << endl;
+    std::cout << "----------------------------------------- " << endl;
+    std::cout << endl;
+    std::cout << "Individual details : " << endl;
+    std::cout << endl;
     // iterate through all blocks
+    stack<char> event;
     for (int i = 0; i < subsets.size(); i++)
     {
         // check if the block is an individual
@@ -544,7 +579,7 @@ int main(int argc, char *argv[])
         if (subsets[i][0].size() > 2 && subsets[i][0][2] == "INDI")
         {
             // if block is individual then insert object into ds
-            // cout << "Working on ...:" << subsets[i][0][1] << endl;
+            // std::cout << "Working on ...:" << subsets[i][0][1] << endl;
             Individuals.insert(make_pair(subsets[i][0][1], new Individual()));
             Individuals[subsets[i][0][1]]->id = subsets[i][0][1];
             for (int j = 0; j < subsets[i].size(); j++)
@@ -580,7 +615,7 @@ int main(int argc, char *argv[])
                     {
                         string debug = Individuals[subsets[i][0][1]]->name + " has invalid sex value";
                         debugger.push_back(make_pair(getLine(i, j), debug));
-                        // cout << Individuals[subsets[i][0][1]]->name << " has invalid sex value" << endl;
+                        // std::cout << Individuals[subsets[i][0][1]]->name << " has invalid sex value" << endl;
                         // throw invalid_argument("Invalid Sex Value for individual with id : " + subsets[i][0][1]);
                     }
                 }
@@ -589,24 +624,48 @@ int main(int argc, char *argv[])
                     // fm.push_back(nullptr);
                     // Individuals[subsets[i][0][1]]->mpFamilies.insert(make_pair('C', ))
                 }
+                /*
+                Age - check for birth and death events and give range based on it
+                Parents - check for famc tag and get husb and wife tags in the id of famc indicated
+                */
+
+                else if (subsets[i][j].size() == 2 && subsets[i][j][1] == "BIRT")
+                {
+                    event.push('B');
+                }
+                else if (subsets[i][j].size() >= 2 && subsets[i][j][1] == "DATE")
+                {
+                    if (event.size() >= 1 && event.top() == 'B')
+                    {
+                        Date BirthDate;
+                        vector<string> date;
+                        for (int m = 2; m < subsets[i][j].size(); m++)
+                        {
+                            date.push_back(subsets[i][j][m]);
+                        }
+                        BirthDate = parseDate(date);
+                        event.pop();
+                        // parse dates
+                    }
+                }
             }
         }
     }
     for (auto &x : Individuals)
     {
-        cout << "Id of Individual        : " << x.second->id << endl;
-        cout << "Name of Individual      : " << x.second->name << endl;
-        cout << "Surname of Individual   : " << x.second->srname << endl;
-        cout << "GivenName of Individual : " << x.second->givname << endl;
-        cout << "Sex of Individual       : " << x.second->sex << endl;
+        std::cout << "Id of Individual        : " << x.second->id << endl;
+        std::cout << "Name of Individual      : " << x.second->name << endl;
+        std::cout << "Surname of Individual   : " << x.second->srname << endl;
+        std::cout << "GivenName of Individual : " << x.second->givname << endl;
+        std::cout << "Sex of Individual       : " << x.second->sex << endl;
         std::cout << endl;
     }
-    cout << "Total number of individuals : " << Individuals.size() << endl;
-    cout << endl;
-    cout << "----------------------------------------- " << endl;
-    cout << endl;
-    cout << "Family details : " << endl;
-    cout << endl;
+    std::cout << "Total number of individuals : " << Individuals.size() << endl;
+    std::cout << endl;
+    std::cout << "----------------------------------------- " << endl;
+    std::cout << endl;
+    std::cout << "Family details : " << endl;
+    std::cout << endl;
     // parsing families
     for (int i = 0; i < subsets.size(); i++)
     {
@@ -635,32 +694,32 @@ int main(int argc, char *argv[])
     }
     for (auto &x : Families)
     {
-        cout << "Id of family              : " << x.second->id << endl;
-        cout << "Husband in the family     : " << x.second->husband.name << endl;
-        cout << "Wife in the family family : " << x.second->wife.name << endl;
+        std::cout << "Id of family              : " << x.second->id << endl;
+        std::cout << "Husband in the family     : " << x.second->husband.name << endl;
+        std::cout << "Wife in the family family : " << x.second->wife.name << endl;
         vector<Individual> ListChildren = x.second->children;
-        cout << "Children in the family    : ";
+        std::cout << "Children in the family    : ";
         int NumberChildren = x.second->children.size();
         for (auto &c : ListChildren)
         {
             if (NumberChildren-- == 1)
-                cout << c.name;
+                std::cout << c.name;
             else
-                cout << c.name << " ,";
+                std::cout << c.name << " ,";
         }
         std::cout << endl;
-        cout << endl;
+        std::cout << endl;
     }
-    cout << "Total number of Families  : " << Families.size() << endl;
-    cout << "----------------------------------" << endl;
-    cout << "Printing debugger info : " << endl;
-    cout << endl;
+    std::cout << "Total number of Families  : " << Families.size() << endl;
+    std::cout << "----------------------------------" << endl;
+    std::cout << "Printing debugger info : " << endl;
+    std::cout << endl;
     for (int i = 0; i < debugger.size(); i++)
     {
-        cout << i + 1 << ". "
-             << "Line " << debugger[i].first << " : " << debugger[i].second << endl;
+        std::cout << i + 1 << ". "
+                  << "Line " << debugger[i].first << " : " << debugger[i].second << endl;
     }
-    cout << endl;
+    std::cout << endl;
 
     in.close();
 
