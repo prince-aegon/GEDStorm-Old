@@ -162,6 +162,12 @@ map<string, Family *> Families;
 // debugger details
 vector<pair<int, string>> debugger;
 
+// storing birth dates
+map<string, Date *> BirthDates;
+
+// storing date of death
+map<string, Date *> DeathDates;
+
 void commentCheck(string s, Comment comment)
 {
     std::cout << "Type    : " << comment.commentType << endl;
@@ -294,8 +300,8 @@ Date parseDate(vector<string> date)
     // format - DD MMM YYYY
     if (std::regex_match(date[0], reDate) && std::regex_match(date[date.size() - 1], reYear))
     {
-        cout << "here" << endl;
         nDate.date = stoi(date[0]);
+        nDate.month = date[1];
         nDate.year = stoi(date[date.size() - 1]);
     }
     if (date.size() == 4)
@@ -314,11 +320,29 @@ Date parseDate(vector<string> date)
         nDate.year = stoi(date[1]);
     }
 
-    if (date[0] == "ABT")
+    if (date[0] == "ABT" || (date[0] == "BEF") || (date[0] == "AFT"))
     {
-        nDate.date = 0;
-        nDate.month = "NULL";
-        nDate.year = stoi(date[1]);
+        if (date.size() == 2)
+        {
+            nDate.date = 0;
+            nDate.month = "NULL";
+            nDate.year = stoi(date[1]);
+        }
+        else if (date.size() == 3)
+        {
+            if (std::find(months.begin(), months.end(), date[1]) != months.end())
+            {
+                nDate.date = 0;
+                nDate.month = date[1];
+                nDate.year = stoi(date[2]);
+            }
+        }
+        else if (date.size() == 4)
+        {
+            nDate.date = stoi(date[1]);
+            nDate.month = date[2];
+            nDate.year = stoi(date[3]);
+        }
     }
     if (date.size() == 1)
     {
@@ -666,10 +690,15 @@ int main(int argc, char *argv[])
                 {
                     event.push('B');
                 }
+                else if (subsets[i][j].size() == 2 && subsets[i][j][1] == "DEAT")
+                {
+                    event.push('D');
+                }
                 else if (subsets[i][j].size() >= 2 && subsets[i][j][1] == "DATE")
                 {
                     if (event.size() >= 1 && event.top() == 'B')
                     {
+                        BirthDates.insert(make_pair(Individuals[subsets[i][0][1]]->id, new Date()));
                         Date BirthDate;
                         vector<string> date;
                         for (int m = 2; m < subsets[i][j].size(); m++)
@@ -677,10 +706,30 @@ int main(int argc, char *argv[])
                             date.push_back(subsets[i][j][m]);
                         }
                         BirthDate = parseDate(date);
+                        BirthDates[Individuals[subsets[i][0][1]]->id]->year = BirthDate.year;
                         // cout << Individuals[subsets[i][0][1]]->name << endl;
                         // cout << "Birth date " << BirthDate.date << endl;
                         // cout << "Birth month " << BirthDate.month << endl;
                         // cout << "Birth year " << BirthDate.year << endl;
+                        // cout << endl;
+                        event.pop();
+                        // parse dates
+                    }
+                    else if (event.size() >= 1 && event.top() == 'D')
+                    {
+                        DeathDates.insert(make_pair(Individuals[subsets[i][0][1]]->id, new Date()));
+                        Date DeathDate;
+                        vector<string> date;
+                        for (int m = 2; m < subsets[i][j].size(); m++)
+                        {
+                            date.push_back(subsets[i][j][m]);
+                        }
+                        DeathDate = parseDate(date);
+                        DeathDates[Individuals[subsets[i][0][1]]->id]->year = DeathDate.year;
+                        // cout << Individuals[subsets[i][0][1]]->name << endl;
+                        // cout << "Death date " << DeathDate.date << endl;
+                        // cout << "Death month " << DeathDate.month << endl;
+                        // cout << "Death year " << DeathDate.year << endl;
                         // cout << endl;
                         event.pop();
                         // parse dates
@@ -696,6 +745,40 @@ int main(int argc, char *argv[])
         std::cout << "Surname of Individual   : " << x.second->srname << endl;
         std::cout << "GivenName of Individual : " << x.second->givname << endl;
         std::cout << "Sex of Individual       : " << x.second->sex << endl;
+
+        // if (BirthDates.find(x.second->id) != BirthDates.end())
+        //     std::cout << "DOB of Individual       : " << BirthDates[x.second->id]->year << endl;
+        // else
+        //     std::cout << "DOB of Individual       : No record" << endl;
+
+        // if (DeathDates.find(x.second->id) != DeathDates.end())
+        //     std::cout << "DOD of Individual       : " << DeathDates[x.second->id]->year << endl;
+        // else
+        //     std::cout << "DOD of Individual       : No record" << endl;
+
+        if (BirthDates.find(x.second->id) != BirthDates.end() && DeathDates.find(x.second->id) != DeathDates.end())
+        {
+            std::cout << "Lived during            : [" << BirthDates[x.second->id]->year << " - " << DeathDates[x.second->id]->year << "]"
+                      << " and died at age of " << (DeathDates[x.second->id]->year - BirthDates[x.second->id]->year) << endl;
+        }
+        else if (BirthDates.find(x.second->id) == BirthDates.end() && DeathDates.find(x.second->id) == DeathDates.end())
+        {
+            std::cout << "Lived during            : No record " << endl;
+        }
+        else
+        {
+            if (BirthDates.find(x.second->id) != BirthDates.end())
+            {
+                std::cout << "Lived during            : [" << BirthDates[x.second->id]->year << " - "
+                          << "]" << endl;
+            }
+            else
+            {
+                std::cout << "Lived during            : ["
+                          << " - " << DeathDates[x.second->id]->year << "]" << endl;
+            }
+        }
+
         std::cout << endl;
     }
     std::cout << "Total number of individuals : " << Individuals.size() << endl;
