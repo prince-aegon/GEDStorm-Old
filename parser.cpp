@@ -290,11 +290,44 @@ Date parseDate(vector<string> date)
     // for (int i = 0; i < date.size(); i++)
     //     cout << date[i] << " ";
     // cout << endl;
+
+    // format - DD MMM YYYY
     if (std::regex_match(date[0], reDate) && std::regex_match(date[date.size() - 1], reYear))
     {
         cout << "here" << endl;
         nDate.date = stoi(date[0]);
         nDate.year = stoi(date[date.size() - 1]);
+    }
+    if (date.size() == 4)
+    {
+        nDate.date = stoi(date[1]);
+        nDate.month = date[2];
+        nDate.year = stoi(date[3]);
+    }
+    // format - MMM YYYY
+    vector<string> months = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
+
+    if (std::find(months.begin(), months.end(), date[0]) != months.end())
+    {
+        nDate.date = 0;
+        nDate.month = date[0];
+        nDate.year = stoi(date[1]);
+    }
+
+    if (date[0] == "ABT")
+    {
+        nDate.date = 0;
+        nDate.month = "NULL";
+        nDate.year = stoi(date[1]);
+    }
+    if (date.size() == 1)
+    {
+        if (std::regex_match(date[0], reYear))
+        {
+            nDate.date = 0;
+            nDate.month = "NULL";
+            nDate.year = stoi(date[0]);
+        }
     }
     return nDate;
 }
@@ -644,6 +677,11 @@ int main(int argc, char *argv[])
                             date.push_back(subsets[i][j][m]);
                         }
                         BirthDate = parseDate(date);
+                        // cout << Individuals[subsets[i][0][1]]->name << endl;
+                        // cout << "Birth date " << BirthDate.date << endl;
+                        // cout << "Birth month " << BirthDate.month << endl;
+                        // cout << "Birth year " << BirthDate.year << endl;
+                        // cout << endl;
                         event.pop();
                         // parse dates
                     }
