@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <map>
 #include <vector>
@@ -110,6 +111,8 @@ public:
 
     int birthYear;
     int deathYear;
+    Individual *father;
+    Individual *mother;
     // stores all the families inividual is part of based on c or s
     map<char, vector<Family>> mpFamilies;
 };
@@ -600,7 +603,7 @@ int main(int argc, char *argv[])
     std::cout << "Header corp web  : " << header.corp->website << endl;
     std::cout << "Header corp vers : " << header.corp->version << endl;
     std::cout << endl;
-    std::cout << "-------------------------------" << endl;
+    // std::cout << "-------------------------------" << endl;
     std::cout << endl;
     // print various functionalities
     // int i = 0;
@@ -738,13 +741,66 @@ int main(int argc, char *argv[])
             }
         }
     }
+
+    // parsing families
+    for (int i = 0; i < subsets.size(); i++)
+    {
+        vector<Individual> children_in;
+        if (subsets[i][0].size() > 2 && subsets[i][0][2] == "FAM")
+        {
+            Families.insert(make_pair(subsets[i][0][1], new Family()));
+            Families[subsets[i][0][1]]->id = subsets[i][0][1];
+            for (int j = 0; j < subsets[i].size(); j++)
+            {
+                if (subsets[i][j][1] == "HUSB")
+                {
+                    Families[subsets[i][0][1]]->husband = *Individuals[subsets[i][j][2]];
+                }
+                else if (subsets[i][j][1] == "WIFE")
+                {
+                    Families[subsets[i][0][1]]->wife = *Individuals[subsets[i][j][2]];
+                }
+                else if (subsets[i][j][1] == "CHIL")
+                {
+                    children_in.push_back(*Individuals[subsets[i][j][2]]);
+                    Families[subsets[i][0][1]]->children = children_in;
+                }
+            }
+        }
+    }
+    // reparse individuals after family details have been parsed
+    for (int i = 0; i < subsets.size(); i++)
+    {
+        if (subsets[i][0].size() > 2 && subsets[i][0][2] == "INDI")
+        {
+            for (int j = 0; j < subsets[i].size(); j++)
+            {
+                if (subsets[i][j].size() == 3 && subsets[i][j][1] == "FAMC")
+                {
+                    // Family family = *Families[subsets[i][j][2]];
+                    // cout << &family.husband << endl;
+                    if (&Families[subsets[i][j][2]]->husband)
+                        Individuals[subsets[i][0][1]]->father = &Families[subsets[i][j][2]]->husband;
+                    if (&Families[subsets[i][j][2]]->wife)
+                        Individuals[subsets[i][0][1]]->mother = &Families[subsets[i][j][2]]->wife;
+                }
+            }
+        }
+    }
+    std::cout << "----------------------------------------- " << endl;
+    std::cout << endl;
     for (auto &x : Individuals)
     {
         std::cout << "Id of Individual        : " << x.second->id << endl;
         std::cout << "Name of Individual      : " << x.second->name << endl;
-        std::cout << "Surname of Individual   : " << x.second->srname << endl;
-        std::cout << "GivenName of Individual : " << x.second->givname << endl;
-        std::cout << "Sex of Individual       : " << x.second->sex << endl;
+        // std::cout << "Surname of Individual   : " << x.second->srname << endl;
+        // std::cout << "GivenName of Individual : " << x.second->givname << endl;
+        if (x.second->sex == 'M')
+            std::cout << "Sex of Individual       : Male " << endl;
+        else if (x.second->sex == 'F')
+            std::cout << "Sex of Individual       : Female " << endl;
+        else
+            std::cout << "Sex of Individual       : Other " << endl;
 
         // if (BirthDates.find(x.second->id) != BirthDates.end())
         //     std::cout << "DOB of Individual       : " << BirthDates[x.second->id]->year << endl;
@@ -778,61 +834,95 @@ int main(int argc, char *argv[])
                           << " - " << DeathDates[x.second->id]->year << "]" << endl;
             }
         }
+        if (x.second->father && x.second->mother)
+        {
+            if (x.second->sex == 'M')
+                std::cout << "Son of                  : " << x.second->father->name << " and " << x.second->mother->name << endl;
+            else if (x.second->sex == 'F')
+                std::cout << "Daughter of             : " << x.second->father->name << " and " << x.second->mother->name << endl;
+            else
+                std::cout << "Child of                : " << x.second->father->name << " and " << x.second->mother->name << endl;
+        }
+        else if (!x.second->father && !x.second->mother)
+        {
+            if (x.second->sex == 'M')
+                std::cout << "Son of                  : No record" << endl;
 
+            else if (x.second->sex == 'F')
+                std::cout << "Daughter of             : No record" << endl;
+
+            else
+                std::cout << "Child of                : No record" << endl;
+        }
+        else
+        {
+            if (x.second->father)
+            {
+                if (x.second->sex == 'M')
+                    std::cout << "Son of                  : " << x.second->father->name << endl;
+                else if (x.second->sex == 'F')
+                    std::cout << "Daughter of                  : " << x.second->father->name << endl;
+                else
+                    std::cout << "Child of                  : " << x.second->father->name << endl;
+            }
+            else if (x.second->mother)
+            {
+                if (x.second->sex == 'M')
+                    std::cout << "Son of                  : " << x.second->mother->name << endl;
+                else if (x.second->sex == 'F')
+                    std::cout << "Daughter of                  : " << x.second->mother->name << endl;
+                else
+                    std::cout << "Child of                  : " << x.second->mother->name << endl;
+            }
+        }
+
+        std::cout << endl;
+        std::cout << " *** " << endl;
         std::cout << endl;
     }
     std::cout << "Total number of individuals : " << Individuals.size() << endl;
-    std::cout << endl;
-    std::cout << "----------------------------------------- " << endl;
+    std::cout << endl
+              << endl;
+    std::cout << "----------------------------------" << endl;
     std::cout << endl;
     std::cout << "Family details : " << endl;
     std::cout << endl;
-    // parsing families
-    for (int i = 0; i < subsets.size(); i++)
-    {
-        vector<Individual> children_in;
-        if (subsets[i][0].size() > 2 && subsets[i][0][2] == "FAM")
-        {
-            Families.insert(make_pair(subsets[i][0][1], new Family()));
-            Families[subsets[i][0][1]]->id = subsets[i][0][1];
-            for (int j = 0; j < subsets[i].size(); j++)
-            {
-                if (subsets[i][j][1] == "HUSB")
-                {
-                    Families[subsets[i][0][1]]->husband = *Individuals[subsets[i][j][2]];
-                }
-                else if (subsets[i][j][1] == "WIFE")
-                {
-                    Families[subsets[i][0][1]]->wife = *Individuals[subsets[i][j][2]];
-                }
-                else if (subsets[i][j][1] == "CHIL")
-                {
-                    children_in.push_back(*Individuals[subsets[i][j][2]]);
-                    Families[subsets[i][0][1]]->children = children_in;
-                }
-            }
-        }
-    }
     for (auto &x : Families)
     {
         std::cout << "Id of family              : " << x.second->id << endl;
         std::cout << "Husband in the family     : " << x.second->husband.name << endl;
-        std::cout << "Wife in the family family : " << x.second->wife.name << endl;
+        std::cout << "Wife in the family        : " << x.second->wife.name << endl;
         vector<Individual> ListChildren = x.second->children;
-        std::cout << "Children in the family    : ";
+        std::cout << "Children in family (";
+        std::cout << std::setw(2) << std::setfill('0') << x.second->children.size();
+        std::cout << ")   : ";
         int NumberChildren = x.second->children.size();
+
         for (auto &c : ListChildren)
         {
             if (NumberChildren-- == 1)
                 std::cout << c.name;
             else
-                std::cout << c.name << " ,";
+                std::cout << c.name << ", ";
         }
+
+        if (x.second->children.size() == 0)
+        {
+            cout << "None" << endl;
+        }
+        else
+        {
+            cout << endl;
+        }
+
         std::cout << endl;
+        std::cout << " *** " << endl;
         std::cout << endl;
     }
     std::cout << "Total number of Families  : " << Families.size() << endl;
+    std::cout << endl;
     std::cout << "----------------------------------" << endl;
+
     std::cout << "Printing debugger info : " << endl;
     std::cout << endl;
     for (int i = 0; i < debugger.size(); i++)
