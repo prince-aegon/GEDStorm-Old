@@ -1,0 +1,94 @@
+Loading File...:
+
+Parsing Start
+Printing Comments...
+-------------------------------
+Type    : space-inline
+comment : jashjas
+line no : 3
+
+Type    : space-inline
+comment : sas
+line no : 13
+
+Type    : space-inline
+comment : CHECK
+line no : 20
+
+-------------------------------
+Number of lines...:106
+
+
+
+Parsing Header info...:
+-------------------------------
+
+Header version   : 5.5.5
+Header encoding  : 1
+Header form type : LINEAGE-LINKED
+Header  Language : 0
+Header corp      : GS
+Header corp name : GEDCOM
+Header corp city : LEIDEN
+Header corp web  : www.gedcom.org
+Header corp vers : 7.8.5
+
+
+
+----------------------------------------- 
+
+Individual details : 
+
+----------------------------------------- 
+
+Id of Individual        : @I1@
+Name of Individual      : Robert Eugene Williams
+Sex of Individual       : Male 
+Lived during            : [1822 - 1905] and died at age of 83
+Son of                  : No record
+
+ *** 
+
+Id of Individual        : @I2@
+Name of Individual      : Mary Ann Wilson
+Sex of Individual       : Female 
+Lived during            : [1828 - ]
+Daughter of             : No record
+
+ *** 
+
+Id of Individual        : @I3@
+Name of Individual      : Joe Williams
+Sex of Individual       : Male 
+Lived during            : [1861 - ]
+Son of                  : Robert Eugene Williams and 
+
+ *** 
+
+Total number of individuals : 3
+
+
+----------------------------------
+
+Family details : 
+
+Id of family              : @F1@
+Husband in the family     : Robert Eugene Williams
+Wife in the family        : Mary Ann Wilson
+Children in family (01)   : Joe Williams
+
+ *** 
+
+Id of family              : @F2@
+Husband in the family     : Robert Eugene Williams
+Wife in the family        : 
+Children in family (01)   : Joe Williams
+
+ *** 
+
+Total number of Families  : 2
+
+----------------------------------
+Printing debugger info : 
+
+
