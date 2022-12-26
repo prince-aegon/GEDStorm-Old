@@ -12,7 +12,7 @@ Parsing Header info...:
 -------------------------------
 
 Header version   : 1.0
-Header encoding  : 1
+Header encoding  : 0
 Header form type : LINEAGE-LINKED
 Header  Language : 0
 Header corp      : webtreeprint.com
@@ -364,7 +364,8 @@ Children in family (01)   : Not named Quiney
 Total number of Families  : 11
 
 ----------------------------------
-Printing debugger info : 
+Printing deviations info : 
 
-1. Line 355 : Not named Quiney has invalid sex value
+1. Line 9 : Invalid encoding encountered
+2. Line 355 : Not named Quiney has invalid sex value
 
