@@ -126,6 +126,17 @@ public:
 // an early declaration since it is invoked once in Individual
 class Family;
 
+// Data structure for dates
+class Date
+{
+public:
+    int date;
+
+    // can change month to an enum
+    string month;
+    int year;
+};
+
 // Class for each individual
 class Individual
 {
@@ -165,17 +176,8 @@ public:
     Individual husband;
     Individual wife;
     vector<Individual> children;
-};
-
-// Data structure for dates
-class Date
-{
-public:
-    int date;
-
-    // can change month to an enum
-    string month;
-    int year;
+    Date MarrDate;
+    string place;
 };
 
 /*
@@ -920,6 +922,7 @@ int main(int argc, char *argv[])
     for (int i = 0; i < subsets.size(); i++)
     {
         vector<Individual> children_in;
+        stack<char> event;
         // check all blocks which are for families
         if (subsets[i][0].size() > 2 && subsets[i][0][2] == "FAM")
         {
@@ -947,6 +950,38 @@ int main(int argc, char *argv[])
                 {
                     children_in.push_back(*Individuals[subsets[i][j][2]]);
                     Families[subsets[i][0][1]]->children = children_in;
+                }
+                else if (subsets[i][j][1] == "MARR")
+                {
+                    event.push('M');
+                    event.push('M');
+                }
+                else if (subsets[i][j][1] == "DATE")
+                {
+                    if (event.size() >= 1 && event.top() == 'M')
+                    {
+                        Date marr;
+                        vector<string> date;
+                        for (int m = 2; m < subsets[i][j].size(); m++)
+                        {
+                            date.push_back(subsets[i][j][m]);
+                        }
+                        marr = parseDate(date);
+                        Families[subsets[i][0][1]]->MarrDate = marr;
+                        event.pop();
+                    }
+                }
+                else if (subsets[i][j][1] == "PLAC")
+                {
+                    if (event.size() >= 1 && event.top() == 'M')
+                    {
+                        string plac;
+                        for (int m = 2; m < subsets[i][j].size(); m++)
+                        {
+                            plac += (subsets[i][j][m]) + " ";
+                        }
+                        Families[subsets[i][0][1]]->place = plac;
+                    }
                 }
             }
         }
@@ -1098,6 +1133,7 @@ int main(int argc, char *argv[])
         std::cout << "Children in family (";
         std::cout << std::setw(2) << std::setfill('0') << x.second->children.size();
         std::cout << ")   : ";
+
         int NumberChildren = x.second->children.size();
 
         for (auto &c : ListChildren)
@@ -1116,6 +1152,16 @@ int main(int argc, char *argv[])
         {
             cout << endl;
         }
+        if (x.second->MarrDate.year == 0)
+        {
+            std::cout << "Date of marriage          : "
+                      << "No record" << endl;
+        }
+        else
+        {
+            std::cout << "Date of marriage          : " << x.second->MarrDate.year << endl;
+        }
+        std::cout << "Place of marriage         : " << x.second->place << endl;
 
         std::cout << endl;
         std::cout << " *** " << endl;

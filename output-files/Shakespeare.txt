@@ -4,7 +4,7 @@ Parsing Start
 Printing Comments...
 -------------------------------
 -------------------------------
-Number of lines...:434
+Number of lines...:437
 
 
 
@@ -288,6 +288,8 @@ Id of family              : @F001@
 Husband in the family     : John Shakespeare
 Wife in the family        : Mary Arden
 Children in family (08)   : William Shakespeare, Joan Shakespeare, Margaret Shakespeare, Gilbert Shakespeare, Joan Shakespeare, Anne Shakespeare, Richard Shakespeare, Edmund Shakespeare
+Date of marriage          : 1557
+Place of marriage         : 
 
  *** 
 
@@ -295,6 +297,8 @@ Id of family              : @F002@
 Husband in the family     : William Shakespeare
 Wife in the family        : Anne Hathaway
 Children in family (03)   : Susanna Shakespeare, Hamnet Shakespeare, Judith Shakespeare
+Date of marriage          : 1582
+Place of marriage         : 
 
  *** 
 
@@ -302,6 +306,8 @@ Id of family              : @F003@
 Husband in the family     : Richard Shakespeare
 Wife in the family        :  Unknown
 Children in family (02)   : Henry Shakespeare, John Shakespeare
+Date of marriage          : No record
+Place of marriage         : 
 
  *** 
 
@@ -309,6 +315,8 @@ Id of family              : @F004@
 Husband in the family     : Henry Shakespeare
 Wife in the family        : Margaret 
 Children in family (00)   : None
+Date of marriage          : No record
+Place of marriage         : 
 
  *** 
 
@@ -316,6 +324,8 @@ Id of family              : @F005@
 Husband in the family     : Robert Arden
 Wife in the family        : Agnes Webbe
 Children in family (01)   : Mary Arden
+Date of marriage          : No record
+Place of marriage         : 
 
  *** 
 
@@ -323,6 +333,8 @@ Id of family              : @F006@
 Husband in the family     : John Hall
 Wife in the family        : Susanna Shakespeare
 Children in family (01)   : Elizabeth Shakespeare
+Date of marriage          : 1607
+Place of marriage         : Stratford-upon-Avon 
 
  *** 
 
@@ -330,6 +342,8 @@ Id of family              : @F007@
 Husband in the family     : Thomas Nash
 Wife in the family        : Elizabeth Shakespeare
 Children in family (00)   : None
+Date of marriage          : 1626
+Place of marriage         : 
 
  *** 
 
@@ -337,6 +351,8 @@ Id of family              : @F008@
 Husband in the family     : John Barnard
 Wife in the family        : Elizabeth Shakespeare
 Children in family (00)   : None
+Date of marriage          : 1649
+Place of marriage         : 
 
  *** 
 
@@ -344,6 +360,8 @@ Id of family              : @F009@
 Husband in the family     : Thomas Quiney
 Wife in the family        : Judith Shakespeare
 Children in family (03)   : Shakespeare Quiney, Richard Quiney, Thomas Quiney
+Date of marriage          : 1616
+Place of marriage         : Stratford-upon-Avon 
 
  *** 
 
@@ -351,6 +369,8 @@ Id of family              : @F010@
 Husband in the family     : Richard Hathaway
 Wife in the family        : 
 Children in family (01)   : Anne Hathaway
+Date of marriage          : 1616
+Place of marriage         : South London 
 
  *** 
 
@@ -358,6 +378,8 @@ Id of family              : @F011@
 Husband in the family     : Thomas Quiney
 Wife in the family        : Margaret Wheeler
 Children in family (01)   : Not named Quiney
+Date of marriage          : No record
+Place of marriage         : Unmarried 
 
  *** 
 
