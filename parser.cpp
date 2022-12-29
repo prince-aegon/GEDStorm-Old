@@ -217,14 +217,19 @@ map<string, Date *> BirthDates;
 
 // storing date of death
 map<string, Date *> DeathDates;
+vector<string> fatherList;
 
+char mode;
 // print comment data
 void commentCheck(string s, Comment comment)
 {
-    std::cout << "Type    : " << comment.commentType << endl;
-    std::cout << "comment : " << s << endl;
-    std::cout << "line no : " << comment.commentLength << endl
-              << endl;
+    if (mode == 'b')
+    {
+        std::cout << "Type    : " << comment.commentType << endl;
+        std::cout << "comment : " << s << endl;
+        std::cout << "line no : " << comment.commentLength << endl
+                  << endl;
+    }
 }
 
 // basic algo to split string based on a delimiter
@@ -345,6 +350,18 @@ int getLine(int m, int n)
     return ans + 1;
 }
 
+void fetchParent(Individual indi)
+{
+    if (&indi == nullptr)
+    {
+        return;
+    }
+    cout << indi.name << endl;
+    cout << indi.name << " " << indi.father->name << endl;
+    fatherList.push_back(indi.name);
+    fetchParent(*(indi.father));
+}
+
 /*
 parse dates based on various formats
 
@@ -457,10 +474,18 @@ int main(int argc, char *argv[])
     // then based on flags create cases for code & print statements
 
     // an example using command-line arguments
-    char mode;
-    // std::cout << argc << argv[0] << argv[1] << endl;
-    if (argv[1] == "-d")
-        std::cout << "debug mode" << endl;
+    // default base mode
+    mode = 'g';
+    // // std::cout << argc << argv[0] << argv[1] << endl;
+    // if (argv[1] == "-d")
+    //     std::cout << "debug mode" << endl;
+
+    // // first flag is for printing generational parents of an individual
+    // if (string(argv[1]) == "-g")
+    // {
+    //     std::cout << "Entering generational mode....:" << endl;
+    //     mode = 'g';
+    // }
 
     char c, fn[10];
     string s;
@@ -486,10 +511,13 @@ int main(int argc, char *argv[])
     curr.push(make_pair("NULL", "@00@"));
 
     std::cout << endl;
-    std::cout << "Parsing Start" << endl;
-    std::cout << "Printing Comments..." << endl;
-    std::cout << "-------------------------------" << endl;
+    if (mode == 'b')
+    {
+        std::cout << "Parsing Start" << endl;
 
+        std::cout << "Printing Comments..." << endl;
+        std::cout << "-------------------------------" << endl;
+    }
     while (in.eof() == 0)
     {
 
@@ -722,48 +750,51 @@ int main(int argc, char *argv[])
     }
 
     // printing all header info
-    for (int i = 0; i < 2; i++)
+    if (mode == 'b')
+    {
+        for (int i = 0; i < 2; i++)
+            std::cout << endl;
+        std::cout << "Parsing Header info...:" << endl;
+        std::cout << "-------------------------------" << endl;
         std::cout << endl;
-    std::cout << "Parsing Header info...:" << endl;
-    std::cout << "-------------------------------" << endl;
-    std::cout << endl;
-    std::cout << "Header version   : " << header.gedcomVersion << endl;
-    std::cout << "Header encoding  : " << header.encoding << endl;
-    std::cout << "Header form type : " << header.formType << endl;
-    std::cout << "Header  Language : " << header.language << endl;
-    std::cout << "Header corp      : " << header.corp->id << endl;
-    std::cout << "Header corp name : " << header.corp->name << endl;
-    std::cout << "Header corp city : " << header.corp->addr->city << endl;
-    std::cout << "Header corp web  : " << header.corp->website << endl;
-    std::cout << "Header corp vers : " << header.corp->version << endl;
-    std::cout << endl;
-    // std::cout << "-------------------------------" << endl;
-    std::cout << endl;
-    // print various functionalities
-    // int i = 0;
-    // for (auto const &x : Submitters)
-    // {
-    //     std::std::cout << x.first << " : " << x.second->submitterName << endl;
-    // }
-    // std::std::cout << endl;
-    // for (auto const &x : lines)
-    // {
-    //     vector<vector<string>> slines = x.second;
-    //     std::std::cout << x.first << endl;
-    //     for (int i = 0; i < slines.size(); i++)
-    //     {
-    //         for (int j = 0; j < slines[i].size(); j++)
-    //             std::std::cout << slines[i][j] << " ";
-    //         std::std::cout << endl;
-    //     }
-    // }
+        std::cout << "Header version   : " << header.gedcomVersion << endl;
+        std::cout << "Header encoding  : " << header.encoding << endl;
+        std::cout << "Header form type : " << header.formType << endl;
+        std::cout << "Header  Language : " << header.language << endl;
+        std::cout << "Header corp      : " << header.corp->id << endl;
+        std::cout << "Header corp name : " << header.corp->name << endl;
+        std::cout << "Header corp city : " << header.corp->addr->city << endl;
+        std::cout << "Header corp web  : " << header.corp->website << endl;
+        std::cout << "Header corp vers : " << header.corp->version << endl;
+        std::cout << endl;
+        // std::cout << "-------------------------------" << endl;
+        std::cout << endl;
+        // print various functionalities
+        // int i = 0;
+        // for (auto const &x : Submitters)
+        // {
+        //     std::std::cout << x.first << " : " << x.second->submitterName << endl;
+        // }
+        // std::std::cout << endl;
+        // for (auto const &x : lines)
+        // {
+        //     vector<vector<string>> slines = x.second;
+        //     std::std::cout << x.first << endl;
+        //     for (int i = 0; i < slines.size(); i++)
+        //     {
+        //         for (int j = 0; j < slines[i].size(); j++)
+        //             std::std::cout << slines[i][j] << " ";
+        //         std::std::cout << endl;
+        //     }
+        // }
 
-    // Parse all Individuals
-    std::cout << endl;
-    std::cout << "----------------------------------------- " << endl;
-    std::cout << endl;
-    std::cout << "Individual details : " << endl;
-    std::cout << endl;
+        // Parse all Individuals
+        std::cout << endl;
+        std::cout << "----------------------------------------- " << endl;
+        std::cout << endl;
+        std::cout << "Individual details : " << endl;
+        std::cout << endl;
+    }
 
     // iterate through all blocks
     stack<char> event;
@@ -1016,171 +1047,192 @@ int main(int argc, char *argv[])
             }
         }
     }
-    std::cout << "----------------------------------------- " << endl;
-    std::cout << endl;
-
-    // print all individual details
-    for (auto &x : Individuals)
+    if (mode == 'b')
     {
-        std::cout << "Id of Individual        : " << x.second->id << endl;
-        std::cout << "Name of Individual      : " << x.second->name << endl;
-        // std::cout << "Surname of Individual   : " << x.second->srname << endl;
-        // std::cout << "GivenName of Individual : " << x.second->givname << endl;
-        if (x.second->sex == 'M')
-            std::cout << "Sex of Individual       : Male " << endl;
-        else if (x.second->sex == 'F')
-            std::cout << "Sex of Individual       : Female " << endl;
-        else
-            std::cout << "Sex of Individual       : Other " << endl;
+        std::cout << "----------------------------------------- " << endl;
+        std::cout << endl;
 
-        // if (BirthDates.find(x.second->id) != BirthDates.end())
-        //     std::cout << "DOB of Individual       : " << BirthDates[x.second->id]->year << endl;
-        // else
-        //     std::cout << "DOB of Individual       : No record" << endl;
+        // print all individual details
+        for (auto &x : Individuals)
+        {
+            std::cout << "Id of Individual        : " << x.second->id << endl;
+            std::cout << "Name of Individual      : " << x.second->name << endl;
+            // std::cout << "Surname of Individual   : " << x.second->srname << endl;
+            // std::cout << "GivenName of Individual : " << x.second->givname << endl;
+            if (x.second->sex == 'M')
+                std::cout << "Sex of Individual       : Male " << endl;
+            else if (x.second->sex == 'F')
+                std::cout << "Sex of Individual       : Female " << endl;
+            else
+                std::cout << "Sex of Individual       : Other " << endl;
 
-        // if (DeathDates.find(x.second->id) != DeathDates.end())
-        //     std::cout << "DOD of Individual       : " << DeathDates[x.second->id]->year << endl;
-        // else
-        //     std::cout << "DOD of Individual       : No record" << endl;
+            // if (BirthDates.find(x.second->id) != BirthDates.end())
+            //     std::cout << "DOB of Individual       : " << BirthDates[x.second->id]->year << endl;
+            // else
+            //     std::cout << "DOB of Individual       : No record" << endl;
 
-        // we display age in form of [YYYY - YYYY] (BirthYear - DeathYear) followed by age of individual at time of death
-        // months are not accounted for and a crude subtraction is followed
-        if (BirthDates.find(x.second->id) != BirthDates.end() && DeathDates.find(x.second->id) != DeathDates.end())
-        {
-            std::cout << "Lived during            : [" << BirthDates[x.second->id]->year << " - " << DeathDates[x.second->id]->year << "]"
-                      << " and died at age of " << (DeathDates[x.second->id]->year - BirthDates[x.second->id]->year) << endl;
-        }
-        else if (BirthDates.find(x.second->id) == BirthDates.end() && DeathDates.find(x.second->id) == DeathDates.end())
-        {
-            std::cout << "Lived during            : No record " << endl;
-        }
-        else
-        {
-            if (BirthDates.find(x.second->id) != BirthDates.end())
+            // if (DeathDates.find(x.second->id) != DeathDates.end())
+            //     std::cout << "DOD of Individual       : " << DeathDates[x.second->id]->year << endl;
+            // else
+            //     std::cout << "DOD of Individual       : No record" << endl;
+
+            // we display age in form of [YYYY - YYYY] (BirthYear - DeathYear) followed by age of individual at time of death
+            // months are not accounted for and a crude subtraction is followed
+            if (BirthDates.find(x.second->id) != BirthDates.end() && DeathDates.find(x.second->id) != DeathDates.end())
             {
-                std::cout << "Lived during            : [" << BirthDates[x.second->id]->year << " - "
-                          << "]" << endl;
+                std::cout << "Lived during            : [" << BirthDates[x.second->id]->year << " - " << DeathDates[x.second->id]->year << "]"
+                          << " and died at age of " << (DeathDates[x.second->id]->year - BirthDates[x.second->id]->year) << endl;
+            }
+            else if (BirthDates.find(x.second->id) == BirthDates.end() && DeathDates.find(x.second->id) == DeathDates.end())
+            {
+                std::cout << "Lived during            : No record " << endl;
             }
             else
             {
-                std::cout << "Lived during            : ["
-                          << " - " << DeathDates[x.second->id]->year << "]" << endl;
+                if (BirthDates.find(x.second->id) != BirthDates.end())
+                {
+                    std::cout << "Lived during            : [" << BirthDates[x.second->id]->year << " - "
+                              << "]" << endl;
+                }
+                else
+                {
+                    std::cout << "Lived during            : ["
+                              << " - " << DeathDates[x.second->id]->year << "]" << endl;
+                }
             }
-        }
 
-        // parents of the individual are printed with son, daughter, child also accounted for
-        if (x.second->father && x.second->mother)
-        {
-            if (x.second->sex == 'M')
-                std::cout << "Son of                  : " << x.second->father->name << " and " << x.second->mother->name << endl;
-            else if (x.second->sex == 'F')
-                std::cout << "Daughter of             : " << x.second->father->name << " and " << x.second->mother->name << endl;
-            else
-                std::cout << "Child of                : " << x.second->father->name << " and " << x.second->mother->name << endl;
-        }
-        else if (!x.second->father && !x.second->mother)
-        {
-            if (x.second->sex == 'M')
-                std::cout << "Son of                  : No record" << endl;
-
-            else if (x.second->sex == 'F')
-                std::cout << "Daughter of             : No record" << endl;
-
-            else
-                std::cout << "Child of                : No record" << endl;
-        }
-        else
-        {
-            if (x.second->father)
+            // parents of the individual are printed with son, daughter, child also accounted for
+            if (x.second->father && x.second->mother)
             {
                 if (x.second->sex == 'M')
-                    std::cout << "Son of                  : " << x.second->father->name << endl;
+                    std::cout << "Son of                  : " << x.second->father->name << " and " << x.second->mother->name << endl;
                 else if (x.second->sex == 'F')
-                    std::cout << "Daughter of                  : " << x.second->father->name << endl;
+                    std::cout << "Daughter of             : " << x.second->father->name << " and " << x.second->mother->name << endl;
                 else
-                    std::cout << "Child of                  : " << x.second->father->name << endl;
+                    std::cout << "Child of                : " << x.second->father->name << " and " << x.second->mother->name << endl;
             }
-            else if (x.second->mother)
+            else if (!x.second->father && !x.second->mother)
             {
                 if (x.second->sex == 'M')
-                    std::cout << "Son of                  : " << x.second->mother->name << endl;
+                    std::cout << "Son of                  : No record" << endl;
+
                 else if (x.second->sex == 'F')
-                    std::cout << "Daughter of                  : " << x.second->mother->name << endl;
+                    std::cout << "Daughter of             : No record" << endl;
+
                 else
-                    std::cout << "Child of                  : " << x.second->mother->name << endl;
+                    std::cout << "Child of                : No record" << endl;
             }
-        }
-
-        std::cout << endl;
-        std::cout << " *** " << endl;
-        std::cout << endl;
-    }
-    std::cout << "Total number of individuals : " << Individuals.size() << endl;
-    std::cout << endl
-              << endl;
-    std::cout << "----------------------------------" << endl;
-    std::cout << endl;
-    std::cout << "Family details : " << endl;
-    std::cout << endl;
-
-    // print all families's details
-    for (auto &x : Families)
-    {
-        std::cout << "Id of family              : " << x.second->id << endl;
-        std::cout << "Husband in the family     : " << x.second->husband.name << endl;
-        std::cout << "Wife in the family        : " << x.second->wife.name << endl;
-        vector<Individual> ListChildren = x.second->children;
-        std::cout << "Children in family (";
-        std::cout << std::setw(2) << std::setfill('0') << x.second->children.size();
-        std::cout << ")   : ";
-
-        int NumberChildren = x.second->children.size();
-
-        for (auto &c : ListChildren)
-        {
-            if (NumberChildren-- == 1)
-                std::cout << c.name;
             else
-                std::cout << c.name << ", ";
-        }
+            {
+                if (x.second->father)
+                {
+                    if (x.second->sex == 'M')
+                        std::cout << "Son of                  : " << x.second->father->name << endl;
+                    else if (x.second->sex == 'F')
+                        std::cout << "Daughter of                  : " << x.second->father->name << endl;
+                    else
+                        std::cout << "Child of                  : " << x.second->father->name << endl;
+                }
+                else if (x.second->mother)
+                {
+                    if (x.second->sex == 'M')
+                        std::cout << "Son of                  : " << x.second->mother->name << endl;
+                    else if (x.second->sex == 'F')
+                        std::cout << "Daughter of                  : " << x.second->mother->name << endl;
+                    else
+                        std::cout << "Child of                  : " << x.second->mother->name << endl;
+                }
+            }
 
-        if (x.second->children.size() == 0)
-        {
-            cout << "None" << endl;
+            std::cout << endl;
+            std::cout << " *** " << endl;
+            std::cout << endl;
         }
-        else
-        {
-            cout << endl;
-        }
-        if (x.second->MarrDate.year == 0)
-        {
-            std::cout << "Date of marriage          : "
-                      << "No record" << endl;
-        }
-        else
-        {
-            std::cout << "Date of marriage          : " << x.second->MarrDate.year << endl;
-        }
-        std::cout << "Place of marriage         : " << x.second->place << endl;
-
+        std::cout << "Total number of individuals : " << Individuals.size() << endl;
+        std::cout << endl
+                  << endl;
+        std::cout << "----------------------------------" << endl;
         std::cout << endl;
-        std::cout << " *** " << endl;
+        std::cout << "Family details : " << endl;
+        std::cout << endl;
+
+        // print all families's details
+        for (auto &x : Families)
+        {
+            std::cout << "Id of family              : " << x.second->id << endl;
+            std::cout << "Husband in the family     : " << x.second->husband.name << endl;
+            std::cout << "Wife in the family        : " << x.second->wife.name << endl;
+            vector<Individual> ListChildren = x.second->children;
+            std::cout << "Children in family (";
+            std::cout << std::setw(2) << std::setfill('0') << x.second->children.size();
+            std::cout << ")   : ";
+
+            int NumberChildren = x.second->children.size();
+
+            for (auto &c : ListChildren)
+            {
+                if (NumberChildren-- == 1)
+                    std::cout << c.name;
+                else
+                    std::cout << c.name << ", ";
+            }
+
+            if (x.second->children.size() == 0)
+            {
+                cout << "None" << endl;
+            }
+            else
+            {
+                cout << endl;
+            }
+            if (x.second->MarrDate.year == 0)
+            {
+                std::cout << "Date of marriage          : "
+                          << "No record" << endl;
+            }
+            else
+            {
+                std::cout << "Date of marriage          : " << x.second->MarrDate.year << endl;
+            }
+            std::cout << "Place of marriage         : " << x.second->place << endl;
+
+            std::cout << endl;
+            std::cout << " *** " << endl;
+            std::cout << endl;
+        }
+        std::cout << "Total number of Families  : " << Families.size() << endl;
+        std::cout << endl;
+        std::cout << "----------------------------------" << endl;
+
+        // at end of parsing we also display various deviations in the ged file format
+        std::cout << "Printing deviations info : " << endl;
+        std::cout << endl;
+        for (int i = 0; i < debugger.size(); i++)
+        {
+            std::cout << i + 1 << ". "
+                      << "Line " << debugger[i].first << " : " << debugger[i].second << endl;
+        }
         std::cout << endl;
     }
-    std::cout << "Total number of Families  : " << Families.size() << endl;
-    std::cout << endl;
-    std::cout << "----------------------------------" << endl;
-
-    // at end of parsing we also display various deviations in the ged file format
-    std::cout << "Printing deviations info : " << endl;
-    std::cout << endl;
-    for (int i = 0; i < debugger.size(); i++)
+    string gname;
+    std::cout << "Enter name of individual : ";
+    // cin >> gname;
+    gname = "Joan Shakespeare";
+    Individual *gtempin;
+    for (auto const &x : Individuals)
     {
-        std::cout << i + 1 << ". "
-                  << "Line " << debugger[i].first << " : " << debugger[i].second << endl;
+        fatherList.clear();
+        if (x.second->name == gname)
+        {
+            gtempin = x.second;
+        }
     }
-    std::cout << endl;
-
+    fetchParent(*gtempin);
+    for (int i = fatherList.size() - 1; i > -1; i--)
+    {
+        cout << i << ". " << fatherList[i] << " ";
+    }
+    cout << endl;
     // close the gedcom file
     in.close();
 
