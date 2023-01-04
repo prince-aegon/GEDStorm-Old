@@ -5,6 +5,7 @@
 #include <vector>
 #include <stack>
 #include <regex>
+#include <string>
 #include "address.h"
 using namespace std;
 
@@ -350,7 +351,7 @@ int getLine(int m, int n)
     return ans + 1;
 }
 
-Individual *parseNames(string id)
+Individual *parseId(string id)
 {
     Individual *gtempin;
     for (auto const &x : Individuals)
@@ -363,19 +364,26 @@ Individual *parseNames(string id)
     return gtempin;
 }
 
+Individual *parseName(string name)
+{
+    Individual *gtempin;
+    for (auto const &x : Individuals)
+    {
+        if (x.second->name == name)
+        {
+            gtempin = x.second;
+        }
+    }
+    return gtempin;
+}
+
 void fetchParent(string id)
 {
-    // if (parseNames(name) == nullptr)
-    // {
-    //     return;
-    // }
-    // cout << indi.name << endl;
-    // cout << indi.name << " " << indi.father->name << endl;
-    fatherList.push_back(parseNames(id)->name);
-
-    if (parseNames(id)->father != nullptr)
+    fatherList.push_back(parseId(id)->name);
+    if (parseId(id)->father != nullptr)
     {
-        fetchParent(parseNames(id)->father->id);
+
+        fetchParent(parseId(id)->father->id);
     }
 }
 
@@ -1231,47 +1239,49 @@ int main(int argc, char *argv[])
         }
         std::cout << endl;
     }
-    for (auto const &x : Individuals)
+
+    string gname, choice;
+    std::cout << "Print for all or one individual?" << endl;
+    cin >> choice;
+    if (choice == "one")
     {
-        cout << x.second->name << endl;
-    }
-    string gname, gname2;
-    std::cout << "Enter name of individual : " << endl;
-    // cin >> gname;
-    // gname = "Joan Shakespeare";
-    // gname2 = "John Shakespeare";
-    // Individual *gtempin, *gtempin3;
-    // gname = "Thomas Quiney";
-    // fetchParent(gname);
-    // for (int i = fatherList.size() - 1; i > -1; i--)
-    // {
-    //     cout << (i + 1) << ". " << fatherList[i] << " ";
-    // }
-    for (auto const &x : Individuals)
-    {
-        gname = x.second->id;
-        fatherList.clear();
-        // if (x.second->name == gname)
-        // {
-        //     gtempin = x.second;
-        // }
-        // if (x.second->name == gname2)
-        // {
-        //     gtempin3 = x.second;
-        // }
-        fetchParent(gname);
+        std::cout << "Enter name of individual : " << endl;
+
+        std::getline(std::cin >> std::ws, gname);
+        fetchParent(parseName(gname)->id);
         for (int i = fatherList.size() - 1; i > -1; i--)
         {
             cout << i << ". " << fatherList[i] << " ";
         }
         cout << endl;
     }
+    else if (choice == "all")
+    {
+        int j = 1;
+        for (auto const &x : Individuals)
+        {
+            gname = x.second->id;
+            fatherList.clear();
+            fetchParent(gname);
+            for (int i = fatherList.size() - 1; i > -1; i--)
+            {
+                if (fatherList.size() == 1)
+                    cout << j++ << ". " << fatherList[i] << " $";
+                else if (i == fatherList.size() - 1 && (fatherList.size()) == 2)
+                    cout << j++ << ". " << fatherList[i] << " <- ";
+                else if (i == fatherList.size() - 1)
+                    cout << j++ << ". " << fatherList[i];
 
+                else if (i == 0)
+                    cout << fatherList[i] << " $";
+                else
+                    cout << " <- " << fatherList[i];
+            }
+            cout << endl;
+        }
+    }
     cout << endl;
-    // cout << gtempin->name << " " << gtempin->father->name << endl;
-    // Individual *gtempin2 = gtempin3;
-    // // gtempin2 = gtempin->father;
-    // cout << gtempin2->name << " " << gtempin2->father->name << endl;
+
     // close the gedcom file
     in.close();
 
