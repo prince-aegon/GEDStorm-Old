@@ -224,7 +224,7 @@ char mode;
 // print comment data
 void commentCheck(string s, Comment comment)
 {
-    if (mode == 'b')
+    if (mode == 'f')
     {
         std::cout << "Type    : " << comment.commentType << endl;
         std::cout << "comment : " << s << endl;
@@ -351,6 +351,7 @@ int getLine(int m, int n)
     return ans + 1;
 }
 
+// given an id, returns individual object for the id
 Individual *parseId(string id)
 {
     Individual *gtempin;
@@ -364,6 +365,7 @@ Individual *parseId(string id)
     return gtempin;
 }
 
+// given a name, returns individual object for the id
 Individual *parseName(string name)
 {
     Individual *gtempin;
@@ -377,6 +379,8 @@ Individual *parseName(string name)
     return gtempin;
 }
 
+// given an id, recursively fills a list with names of
+// successors
 void fetchParent(string id)
 {
     fatherList.push_back(parseId(id)->name);
@@ -493,7 +497,7 @@ int main(int argc, char *argv[])
     // -d -> debugger mode
     // -f -> full mode
     // -s -> short mode
-
+    // -g -> generational mode
     // some ways include - if some way of implementing such flags exist
     // use command-line args to read flags
     // then based on flags create cases for code & print statements
@@ -506,11 +510,16 @@ int main(int argc, char *argv[])
     //     std::cout << "debug mode" << endl;
 
     // // first flag is for printing generational parents of an individual
-    // if (string(argv[1]) == "-g")
-    // {
-    //     std::cout << "Entering generational mode....:" << endl;
-    //     mode = 'g';
-    // }
+    if (string(argv[1]) == "-g")
+    {
+        std::cout << "Entering Full mode....:" << endl;
+        mode = 'g';
+    }
+    if (string(argv[1]) == "-f")
+    {
+        std::cout << "Entering generational mode....:" << endl;
+        mode = 'f';
+    }
 
     char c, fn[10];
     string s;
@@ -536,7 +545,7 @@ int main(int argc, char *argv[])
     curr.push(make_pair("NULL", "@00@"));
 
     std::cout << endl;
-    if (mode == 'b')
+    if (mode == 'f')
     {
         std::cout << "Parsing Start" << endl;
 
@@ -775,7 +784,7 @@ int main(int argc, char *argv[])
     }
 
     // printing all header info
-    if (mode == 'b')
+    if (mode == 'f')
     {
         for (int i = 0; i < 2; i++)
             std::cout << endl;
@@ -1072,7 +1081,7 @@ int main(int argc, char *argv[])
             }
         }
     }
-    if (mode == 'b')
+    if (mode == 'f')
     {
         std::cout << "----------------------------------------- " << endl;
         std::cout << endl;
@@ -1240,44 +1249,47 @@ int main(int argc, char *argv[])
         std::cout << endl;
     }
 
-    string gname, choice;
-    std::cout << "Print for all or one individual?" << endl;
-    cin >> choice;
-    if (choice == "one")
+    if (mode == 'g')
     {
-        std::cout << "Enter name of individual : " << endl;
+        string gname, choice;
+        std::cout << "Print for all or one individual?" << endl;
+        cin >> choice;
+        if (choice == "one")
+        {
+            std::cout << "Enter name of individual : " << endl;
 
-        std::getline(std::cin >> std::ws, gname);
-        fetchParent(parseName(gname)->id);
-        for (int i = fatherList.size() - 1; i > -1; i--)
-        {
-            cout << i << ". " << fatherList[i] << " ";
-        }
-        cout << endl;
-    }
-    else if (choice == "all")
-    {
-        int j = 1;
-        for (auto const &x : Individuals)
-        {
-            gname = x.second->id;
-            fatherList.clear();
-            fetchParent(gname);
+            std::getline(std::cin >> std::ws, gname);
+            fetchParent(parseName(gname)->id);
             for (int i = fatherList.size() - 1; i > -1; i--)
             {
-                if (fatherList.size() == 1)
-                    cout << j++ << ". " << fatherList[i] << " $";
-                else if (i == fatherList.size() - 1 && (fatherList.size()) == 2)
-                    cout << j++ << ". " << fatherList[i] << " <- ";
-                else if (i == fatherList.size() - 1)
-                    cout << j++ << ". " << fatherList[i];
-
-                else if (i == 0)
-                    cout << fatherList[i] << " $";
-                else
-                    cout << " <- " << fatherList[i];
+                cout << i << ". " << fatherList[i] << " ";
             }
             cout << endl;
+        }
+        else if (choice == "all")
+        {
+            int j = 1;
+            for (auto const &x : Individuals)
+            {
+                gname = x.second->id;
+                fatherList.clear();
+                fetchParent(gname);
+                for (int i = fatherList.size() - 1; i > -1; i--)
+                {
+                    if (fatherList.size() == 1)
+                        cout << j++ << ". " << fatherList[i] << " $";
+                    else if (i == fatherList.size() - 1 && (fatherList.size()) == 2)
+                        cout << j++ << ". " << fatherList[i] << " <- ";
+                    else if (i == fatherList.size() - 1)
+                        cout << j++ << ". " << fatherList[i];
+
+                    else if (i == 0)
+                        cout << fatherList[i] << " $";
+                    else
+                        cout << " <- " << fatherList[i];
+                }
+                cout << endl;
+            }
         }
     }
     cout << endl;
