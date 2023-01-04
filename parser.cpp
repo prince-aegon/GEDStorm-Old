@@ -350,16 +350,33 @@ int getLine(int m, int n)
     return ans + 1;
 }
 
-void fetchParent(Individual indi)
+Individual *parseNames(string id)
 {
-    if (&indi == nullptr)
+    Individual *gtempin;
+    for (auto const &x : Individuals)
     {
-        return;
+        if (x.second->id == id)
+        {
+            gtempin = x.second;
+        }
     }
-    cout << indi.name << endl;
-    cout << indi.name << " " << indi.father->name << endl;
-    fatherList.push_back(indi.name);
-    fetchParent(*(indi.father));
+    return gtempin;
+}
+
+void fetchParent(string id)
+{
+    // if (parseNames(name) == nullptr)
+    // {
+    //     return;
+    // }
+    // cout << indi.name << endl;
+    // cout << indi.name << " " << indi.father->name << endl;
+    fatherList.push_back(parseNames(id)->name);
+
+    if (parseNames(id)->father != nullptr)
+    {
+        fetchParent(parseNames(id)->father->id);
+    }
 }
 
 /*
@@ -1214,25 +1231,47 @@ int main(int argc, char *argv[])
         }
         std::cout << endl;
     }
-    string gname;
-    std::cout << "Enter name of individual : ";
-    // cin >> gname;
-    gname = "Joan Shakespeare";
-    Individual *gtempin;
     for (auto const &x : Individuals)
     {
-        fatherList.clear();
-        if (x.second->name == gname)
-        {
-            gtempin = x.second;
-        }
+        cout << x.second->name << endl;
     }
-    fetchParent(*gtempin);
-    for (int i = fatherList.size() - 1; i > -1; i--)
+    string gname, gname2;
+    std::cout << "Enter name of individual : " << endl;
+    // cin >> gname;
+    // gname = "Joan Shakespeare";
+    // gname2 = "John Shakespeare";
+    // Individual *gtempin, *gtempin3;
+    // gname = "Thomas Quiney";
+    // fetchParent(gname);
+    // for (int i = fatherList.size() - 1; i > -1; i--)
+    // {
+    //     cout << (i + 1) << ". " << fatherList[i] << " ";
+    // }
+    for (auto const &x : Individuals)
     {
-        cout << i << ". " << fatherList[i] << " ";
+        gname = x.second->id;
+        fatherList.clear();
+        // if (x.second->name == gname)
+        // {
+        //     gtempin = x.second;
+        // }
+        // if (x.second->name == gname2)
+        // {
+        //     gtempin3 = x.second;
+        // }
+        fetchParent(gname);
+        for (int i = fatherList.size() - 1; i > -1; i--)
+        {
+            cout << i << ". " << fatherList[i] << " ";
+        }
+        cout << endl;
     }
+
     cout << endl;
+    // cout << gtempin->name << " " << gtempin->father->name << endl;
+    // Individual *gtempin2 = gtempin3;
+    // // gtempin2 = gtempin->father;
+    // cout << gtempin2->name << " " << gtempin2->father->name << endl;
     // close the gedcom file
     in.close();
 
