@@ -11,9 +11,14 @@ using namespace std;
 
 // set file to be read from to variable FILE_NAME
 
+// linux local addresses
+
 // #define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/submitter.ged"
 #define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/Shakespeare.ged"
 // #define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/The English and British Kings and Queens.ged"
+
+// mac local address
+#define FILE_NAME "/Users/sarthak.jha/projects/GEDCOM-Parser/GEDCOM-Files/Shakespeare.ged"
 
 #define regex_cout "\w*(?<!:)std::cout"
 
