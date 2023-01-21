@@ -1,4 +1,6 @@
-Entering generational mode....:
+Running on -> Darwin@22.2.0 : arm64
+
+Entering Full mode....:
 Loading File...:
 
 Parsing Start
@@ -13,9 +15,9 @@ Parsing Header info...:
 -------------------------------
 
 Header version   : 1.0
-Header encoding  : 0
+Header encoding  : 1315277312
 Header form type : LINEAGE-LINKED
-Header  Language : 0
+Header  Language : 2
 Header corp      : webtreeprint.com
 Header corp name : webtreeprint
 Header corp city : 

@@ -7,6 +7,8 @@
 #include <regex>
 #include <string>
 #include "address.h"
+#include <sys/utsname.h>
+
 using namespace std;
 
 // set file to be read from to variable FILE_NAME
@@ -14,11 +16,14 @@ using namespace std;
 // linux local addresses
 
 // #define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/submitter.ged"
-#define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/Shakespeare.ged"
+#define FILE_NAME_LINUX "/home/sarthak/projects/gedcom/GEDCOM-Files/Shakespeare.ged"
 // #define FILE_NAME "/home/sarthak/projects/gedcom/GEDCOM-Files/The English and British Kings and Queens.ged"
 
 // mac local address
-#define FILE_NAME "/Users/sarthak.jha/projects/GEDCOM-Parser/GEDCOM-Files/Shakespeare.ged"
+#define FILE_NAME_MAC "/Users/sarthak.jha/projects/GEDCOM-Parser/GEDCOM-Files/Shakespeare.ged"
+
+// command to run in Mac
+#define RUN_CMD "g++ -std=c++11 parser.cpp -o parser; ./parser -f > output-files/Shakespeare.txt"
 
 #define regex_cout "\w*(?<!:)std::cout"
 
@@ -498,6 +503,12 @@ Date parseDate(vector<string> date)
 int main(int argc, char *argv[])
 {
 
+    struct utsname name;
+    if (uname(&name))
+        exit(-1);
+    printf("Running on -> %s@%s : %s\n", name.sysname, name.release, name.machine);
+    cout << endl;
+
     // implement custom flags - TODO
     // -d -> debugger mode
     // -f -> full mode
@@ -517,12 +528,12 @@ int main(int argc, char *argv[])
     // // first flag is for printing generational parents of an individual
     if (string(argv[1]) == "-g")
     {
-        std::cout << "Entering Full mode....:" << endl;
+        std::cout << "Entering Generational mode....:" << endl;
         mode = 'g';
     }
     if (string(argv[1]) == "-f")
     {
-        std::cout << "Entering generational mode....:" << endl;
+        std::cout << "Entering Full mode....:" << endl;
         mode = 'f';
     }
 
@@ -531,12 +542,12 @@ int main(int argc, char *argv[])
     Comment cTYPE;
 
     // read file name
-    if (FILE_NAME == "")
+    if (FILE_NAME_MAC == "")
     {
         std::cout << "Enter the file name....:";
         cin >> fn;
     }
-    ifstream in(FILE_NAME);
+    ifstream in(FILE_NAME_MAC);
     if (!in)
     {
         std::cout << "Error! File Does not Exist";
