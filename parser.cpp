@@ -23,7 +23,7 @@ using namespace std;
 #define FILE_NAME_MAC "/Users/sarthak.jha/projects/GEDCOM-Parser/GEDCOM-Files/Shakespeare.ged"
 
 // command to run in Mac
-#define RUN_CMD "g++ -std=c++11 parser.cpp -o parser; ./parser -f > output-files/Shakespeare.txt"
+#define RUN_CMD "g++ -std=c++11 parser.cpp -o parser; ./parser -f > output-files/ASOIAF.txt"
 
 #define regex_cout "\w*(?<!:)std::cout"
 

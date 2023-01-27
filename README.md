@@ -10,16 +10,17 @@ A parser in C++ for GEDCOM 5.5.5 Files.
 - All individuals are parsed and their name, sex and id are displayed.
 - Number of individuals is calculated
 - Calculate and link individuals to families
+- Create modes to run based on user
+- Process errors in file and display them appropriately
 
 ## TODO
 
-- Create modes to run based on user
 - Calculate ages of individuals during events
-- Process errors in file and display them appropriately
-- GUI Interface to display families and other data in a readable form
+- Use [JSON Spirit](https://github.com/cierelabs/json_spirit) or [ThorsSerializer] (https://github.com/Loki-Astari/ThorsSerializer) to convert our objects into JSON Strings
+- Use the json strings to store data on a web server
+- On multiple parses of a single file, store the json object in a database like Postgres or MySql
 
 ## Future ideas
 
 - Process and correct error on the fly
-- Use a database to retrieve information for future calls
 - Remove irrelevant and redundant data from the GEDCOM file before parsing
