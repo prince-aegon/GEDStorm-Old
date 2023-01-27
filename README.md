@@ -16,7 +16,7 @@ A parser in C++ for GEDCOM 5.5.5 Files.
 ## TODO
 
 - Calculate ages of individuals during events
-- Use [JSON Spirit](https://github.com/cierelabs/json_spirit) or [ThorsSerializer] (https://github.com/Loki-Astari/ThorsSerializer) to convert our objects into JSON Strings
+- Use [JSON Spirit](https://github.com/cierelabs/json_spirit) or [ThorsSerializer](https://github.com/Loki-Astari/ThorsSerializer) to convert our objects into JSON Strings
 - Use the json strings to store data on a web server
 - On multiple parses of a single file, store the json object in a database like Postgres or MySql
 
