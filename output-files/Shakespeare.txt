@@ -15,7 +15,7 @@ Parsing Header info...:
 -------------------------------
 
 Header version   : 1.0
-Header encoding  : 1315277312
+Header encoding  : 912116224
 Header form type : LINEAGE-LINKED
 Header  Language : 2
 Header corp      : webtreeprint.com

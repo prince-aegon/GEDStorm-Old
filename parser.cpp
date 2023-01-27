@@ -1103,8 +1103,15 @@ int main(int argc, char *argv[])
         std::cout << endl;
 
         // print all individual details
+        std::ofstream myfile;
+        myfile.open("indi_strg.csv");
+        int keyID = 1;
         for (auto &x : Individuals)
         {
+            if (BirthDates.find(x.second->id) != BirthDates.end())
+                myfile << keyID++ << "," << x.second->id << "," << x.second->name << "," << BirthDates[x.second->id]->year << ", \n";
+            else
+                myfile << keyID++ << "," << x.second->id << "," << x.second->name << "," << 0 << "\n";
             std::cout << "Id of Individual        : " << x.second->id << endl;
             std::cout << "Name of Individual      : " << x.second->name << endl;
             // std::cout << "Surname of Individual   : " << x.second->srname << endl;
