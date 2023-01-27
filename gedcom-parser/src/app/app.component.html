@@ -1,0 +1,23 @@
+<div class="container">  
+    
+  <h1> GEDCOM Parser</h1>  
+    <table>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Year</th>
+      </tr>
+      <tr *ngFor="let key of keys">
+        <td >
+          {{key}}
+        </td>
+        <td>{{individuals[key].name}}</td>
+        <td>{{individuals[key].year}}</td>
+      </tr>
+      <!-- <div *ngFor="let key of keys">   -->
+        <!-- <th>{{ individual.id }}</th>   -->
+        <!-- <h6>{{ individuals[key].name }}</h6>   -->
+        <!-- <th>{{ individual.year }}</th>   -->
+      <!-- </div>   -->
+    </table>
+</div>  
