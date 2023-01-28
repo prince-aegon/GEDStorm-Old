@@ -1,23 +1,27 @@
-<div class="container">  
-    
+<html>
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  </head>
+  <body>    
   <h1> GEDCOM Parser</h1>  
-    <table>
-      <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Year</th>
+  <h2>Individuals</h2>
+    <table class = "w-50 p-3 position-absolute table table-hover table-dark table-striped">
+      <thead>
+        <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Year</th>
       </tr>
-      <tr *ngFor="let key of keys">
+      </thead>
+      <tbody *ngFor="let key of keys">
+        <tr scope = "row">
         <td >
           {{key}}
         </td>
         <td>{{individuals[key].name}}</td>
         <td>{{individuals[key].year}}</td>
       </tr>
-      <!-- <div *ngFor="let key of keys">   -->
-        <!-- <th>{{ individual.id }}</th>   -->
-        <!-- <h6>{{ individuals[key].name }}</h6>   -->
-        <!-- <th>{{ individual.year }}</th>   -->
-      <!-- </div>   -->
+      </tbody>
     </table>
-</div>  
+</body>
+</html>
