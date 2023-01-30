@@ -294,9 +294,13 @@ void submTag(vector<string> submSplit)
 
     // check if subm tag already in lines map
     if (lines.find("SUBM") == lines.end())
+    {
         lines.insert(make_pair("SUBM", submitterLines));
+    }
     else
+    {
         lines["SUBM"] = submitterLines;
+    }
 
     // store the id
     string submitterId = submSplit[1];
@@ -354,9 +358,13 @@ pair<int, string> parseComments(string s, int number_of_lines, Comment cTYPE)
                 if (s[i + 1] == '/' && s[i + 2] == '/')
                 {
                     if (s[i] == ' ')
+                    {
                         cTYPE.commentType = "space-inline";
+                    }
                     else if (s[i] == '\t')
+                    {
                         cTYPE.commentType = "tab-inline";
+                    }
                     cTYPE.commentLength = number_of_lines;
                     string commentString = s.substr(i + 4, s.length() - (i + 3));
                     sanitised = s.substr(0, i);
@@ -368,9 +376,13 @@ pair<int, string> parseComments(string s, int number_of_lines, Comment cTYPE)
 
     // check if sanitised string is not null
     if (sanitised == "")
+    {
         return make_pair(0, sanitised);
+    }
     else
+    {
         return make_pair(1, sanitised);
+    }
 }
 
 // given a block number and a line number give the line number from the
@@ -715,15 +727,25 @@ int main(int argc, char *argv[])
             else if (subsets[i][j][1] == "CHAR")
             {
                 if (subsets[i][j][2] == "UTF-8")
+                {
                     header.encoding = UTF8;
+                }
                 else if (subsets[i][j][2] == "UNICODE")
+                {
                     header.encoding = UNICODE;
+                }
                 else if (subsets[i][j][2] == "ANSEL")
+                {
                     header.encoding = ANSEL;
+                }
                 else if (subsets[i][j][2] == "ASCII")
+                {
                     header.encoding = ASCII;
+                }
                 else if (subsets[i][j][2] == "UTF-16")
+                {
                     header.encoding = UTF16;
+                }
                 else
                 {
                     string debug = "Invalid encoding encountered";
@@ -755,15 +777,25 @@ int main(int argc, char *argv[])
             else if (subsets[i][j][1] == "LANG")
             {
                 if (subsets[i][j][2] == "English")
+                {
                     header.language = English;
+                }
                 else if (subsets[i][j][2] == "German")
+                {
                     header.language = German;
+                }
                 else if (subsets[i][j][2] == "French")
+                {
                     header.language = French;
+                }
                 else if (subsets[i][j][2] == "Spanish")
+                {
                     header.language = Spanish;
+                }
                 else if (subsets[i][j][2] == "Japanese")
+                {
                     header.language = Japanese;
+                }
                 else
                 {
                     string debug = "Invalid language encountered";
@@ -896,13 +928,18 @@ int main(int argc, char *argv[])
                 if (subsets[i][j][1] == "NAME")
                 {
                     string name = "";
+
                     for (int k = 2; k < int(subsets[i][j].size()); k++)
                     {
                         // sanitize name - contains / to separate words in name
                         if (subsets[i][j][k][0] == '/')
+                        {
                             name += subsets[i][j][k].substr(1, (subsets[i][j][k]).size() - 2);
+                        }
                         else
+                        {
                             name += subsets[i][j][k] + " ";
+                        }
                     }
                     Individuals[subsets[i][0][1]]->name = name;
                 }
@@ -917,9 +954,13 @@ int main(int argc, char *argv[])
                 else if (subsets[i][j][1] == "SEX")
                 {
                     if (subsets[i][j][2] == "M")
+                    {
                         Individuals[subsets[i][0][1]]->sex = 'M';
+                    }
                     else if (subsets[i][j][2] == "F")
+                    {
                         Individuals[subsets[i][0][1]]->sex = 'F';
+                    }
                     else
                     {
                         string debug = Individuals[subsets[i][0][1]]->name + " has invalid sex value";
@@ -1115,9 +1156,13 @@ int main(int argc, char *argv[])
                     // Family family = *Families[subsets[i][j][2]];
                     // cout << &family.husband << endl;
                     if (&Families[subsets[i][j][2]]->husband)
+                    {
                         Individuals[subsets[i][0][1]]->father = &Families[subsets[i][j][2]]->husband;
+                    }
                     if (&Families[subsets[i][j][2]]->wife)
+                    {
                         Individuals[subsets[i][0][1]]->mother = &Families[subsets[i][j][2]]->wife;
+                    }
                 }
             }
         }
@@ -1134,20 +1179,30 @@ int main(int argc, char *argv[])
         for (auto &x : Individuals)
         {
             if (BirthDates.find(x.second->id) != BirthDates.end())
+            {
                 myfile << keyID++ << "," << x.second->id << "," << x.second->name << "," << BirthDates[x.second->id]->year << ", \n";
+            }
             else
+            {
                 myfile << keyID++ << "," << x.second->id << "," << x.second->name << "," << 0 << "\n";
+            }
 
             std::cout << "Id of Individual        : " << x.second->id << endl;
             std::cout << "Name of Individual      : " << x.second->name << endl;
             // std::cout << "Surname of Individual   : " << x.second->srname << endl;
             // std::cout << "GivenName of Individual : " << x.second->givname << endl;
             if (x.second->sex == 'M')
+            {
                 std::cout << "Sex of Individual       : Male " << endl;
+            }
             else if (x.second->sex == 'F')
+            {
                 std::cout << "Sex of Individual       : Female " << endl;
+            }
             else
+            {
                 std::cout << "Sex of Individual       : Other " << endl;
+            }
 
             // if (BirthDates.find(x.second->id) != BirthDates.end())
             //     std::cout << "DOB of Individual       : " << BirthDates[x.second->id]->year << endl;
@@ -1188,42 +1243,68 @@ int main(int argc, char *argv[])
             if (x.second->father && x.second->mother)
             {
                 if (x.second->sex == 'M')
+                {
                     std::cout << "Son of                  : " << x.second->father->name << " and " << x.second->mother->name << endl;
+                }
+
                 else if (x.second->sex == 'F')
+                {
                     std::cout << "Daughter of             : " << x.second->father->name << " and " << x.second->mother->name << endl;
+                }
+
                 else
+                {
                     std::cout << "Child of                : " << x.second->father->name << " and " << x.second->mother->name << endl;
+                }
             }
             else if (!x.second->father && !x.second->mother)
             {
                 if (x.second->sex == 'M')
+                {
                     std::cout << "Son of                  : No record" << endl;
+                }
 
                 else if (x.second->sex == 'F')
+                {
                     std::cout << "Daughter of             : No record" << endl;
+                }
 
                 else
+                {
                     std::cout << "Child of                : No record" << endl;
+                }
             }
             else
             {
                 if (x.second->father)
                 {
                     if (x.second->sex == 'M')
+                    {
                         std::cout << "Son of                  : " << x.second->father->name << endl;
+                    }
                     else if (x.second->sex == 'F')
+                    {
                         std::cout << "Daughter of                  : " << x.second->father->name << endl;
+                    }
                     else
+                    {
                         std::cout << "Child of                  : " << x.second->father->name << endl;
+                    }
                 }
                 else if (x.second->mother)
                 {
                     if (x.second->sex == 'M')
+                    {
                         std::cout << "Son of                  : " << x.second->mother->name << endl;
+                    }
                     else if (x.second->sex == 'F')
+                    {
                         std::cout << "Daughter of                  : " << x.second->mother->name << endl;
+                    }
                     else
+                    {
                         std::cout << "Child of                  : " << x.second->mother->name << endl;
+                    }
                 }
             }
 
@@ -1245,7 +1326,9 @@ int main(int argc, char *argv[])
             std::cout << "Id of family              : " << x.second->id << endl;
             std::cout << "Husband in the family     : " << x.second->husband.name << endl;
             std::cout << "Wife in the family        : " << x.second->wife.name << endl;
+
             vector<Individual> ListChildren = x.second->children;
+
             std::cout << "Children in family (";
             std::cout << std::setw(2) << std::setfill('0') << x.second->children.size();
             std::cout << ")   : ";
@@ -1255,9 +1338,13 @@ int main(int argc, char *argv[])
             for (auto &c : ListChildren)
             {
                 if (NumberChildren-- == 1)
+                {
                     std::cout << c.name;
+                }
                 else
+                {
                     std::cout << c.name << ", ";
+                }
             }
 
             if (x.second->children.size() == 0)
@@ -1309,6 +1396,7 @@ int main(int argc, char *argv[])
 
             std::getline(std::cin >> std::ws, gname);
             fetchParent(parseName(gname)->id);
+
             for (int i = fatherList.size() - 1; i > -1; i--)
             {
                 cout << i << ". " << fatherList[i] << " ";
@@ -1323,19 +1411,30 @@ int main(int argc, char *argv[])
                 gname = x.second->id;
                 fatherList.clear();
                 fetchParent(gname);
+
                 for (int i = fatherList.size() - 1; i > -1; i--)
                 {
                     if (fatherList.size() == 1)
+                    {
                         cout << j++ << ". " << fatherList[i] << " $";
+                    }
                     else if (i == fatherList.size() - 1 && (fatherList.size()) == 2)
+                    {
                         cout << j++ << ". " << fatherList[i] << " <- ";
+                    }
                     else if (i == fatherList.size() - 1)
+                    {
                         cout << j++ << ". " << fatherList[i];
+                    }
 
                     else if (i == 0)
+                    {
                         cout << fatherList[i] << " $";
+                    }
                     else
+                    {
                         cout << " <- " << fatherList[i];
+                    }
                 }
                 cout << endl;
             }
