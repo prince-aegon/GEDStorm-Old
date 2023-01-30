@@ -23,7 +23,7 @@ A parser in C++ for GEDCOM 5.5.5 Files.
 #### Method 2:
 
 All the commands are entered in shell file at root. Run the file using:
-`bash shell`
+`./shell.sh`
 
 ## 2. Status
 
