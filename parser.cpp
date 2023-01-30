@@ -48,7 +48,7 @@ using namespace std;
 #define FILE_NAME_MAC "/Users/sarthak.jha/projects/GEDCOM-Parser/GEDCOM-Files/Shakespeare.ged"
 
 // command to run in Mac
-#define RUN_CMD "g++ -std=c++11 parser.cpp -o parser; ./parser -f > output-files/ASOIAF.txt"
+#define RUN_CMD "g++ -std=c++11 parser.cpp -o parser; ./parser -f > output-files/Shakespeare.txt"
 
 #define regex_cout "\w*(?<!:)std::cout"
 
@@ -314,6 +314,33 @@ void submTag(vector<string> submSplit)
 
     // push current state onto stack
     curr.push(make_pair("SUBM", submitterId));
+}
+
+int parents_age_during_birth(Individual *child, Individual *parent)
+{
+    if (parent == nullptr)
+    {
+        return -2;
+    }
+    // cout << child->birthYear << " " << parent->birthYear << endl;
+    if (BirthDates.find(child->id) != BirthDates.end())
+    {
+        if (BirthDates.find(parent->id) != BirthDates.end())
+        {
+            int child_year = BirthDates[child->id]->year;
+            int parent_year = BirthDates[parent->id]->year;
+
+            // cout << child_year << " " << parent_year << endl;
+
+            int age = child_year - parent_year;
+
+            return age;
+        }
+    }
+    else
+    {
+        return -1;
+    }
 }
 
 // some processing related to submitter info
@@ -1174,7 +1201,7 @@ int main(int argc, char *argv[])
 
         // print all individual details
         std::ofstream myfile;
-        myfile.open("indi_strg.csv");
+        myfile.open("json_indi/indi_strg.csv");
         int keyID = 1;
         for (auto &x : Individuals)
         {
@@ -1242,19 +1269,87 @@ int main(int argc, char *argv[])
             // parents of the individual are printed with son, daughter, child also accounted for
             if (x.second->father && x.second->mother)
             {
+                int fathers_age = parents_age_during_birth(x.second, x.second->father);
+                int mothers_age = parents_age_during_birth(x.second, x.second->mother);
+                if (fathers_age < 5)
+                {
+                    fathers_age = -1;
+                }
+                if (mothers_age < 5)
+                {
+                    mothers_age = -1;
+                }
                 if (x.second->sex == 'M')
                 {
-                    std::cout << "Son of                  : " << x.second->father->name << " and " << x.second->mother->name << endl;
+                    if (fathers_age != -1)
+                    {
+                        std::cout << "Son of                  : " << x.second->father->name
+                                  << "(" << fathers_age << ")"
+                                  << " and ";
+                        //   << x.second->mother->name
+                        //   << "(" << mothers_age << ")"
+                        //   << endl;
+                    }
+                    else if (fathers_age == -1)
+                    {
+                        std::cout << "Son of                  : " << x.second->father->name
+                                  << "(N.A)"
+                                  << " and ";
+                    }
+
+                    if (mothers_age != -1)
+                    {
+                        std::cout << x.second->mother->name
+                                  << "(" << mothers_age << ")"
+                                  << endl;
+                    }
+                    else if (mothers_age == -1)
+                    {
+                        std::cout << x.second->mother->name
+                                  << "(N.A)"
+                                  << endl;
+                    }
                 }
 
                 else if (x.second->sex == 'F')
                 {
-                    std::cout << "Daughter of             : " << x.second->father->name << " and " << x.second->mother->name << endl;
+                    if (fathers_age != -1)
+                    {
+                        std::cout << "Daughter of             : " << x.second->father->name
+                                  << "(" << fathers_age << ")"
+                                  << " and ";
+                        //   << x.second->mother->name
+                        //   << "(" << mothers_age << ")"
+                        //   << endl;
+                    }
+                    else if (fathers_age == -1)
+                    {
+                        std::cout << "Daughter of             : " << x.second->father->name
+                                  << "(N.A)"
+                                  << " and ";
+                    }
+
+                    if (mothers_age != -1)
+                    {
+                        std::cout << x.second->mother->name
+                                  << "(" << mothers_age << ")"
+                                  << endl;
+                    }
+                    else if (mothers_age == -1)
+                    {
+                        std::cout << x.second->mother->name
+                                  << "(N.A)"
+                                  << endl;
+                    }
                 }
 
                 else
                 {
-                    std::cout << "Child of                : " << x.second->father->name << " and " << x.second->mother->name << endl;
+                    std::cout << "Child of                 : " << x.second->father->name
+                              << "(" << fathers_age << ")"
+                              << " and " << x.second->mother->name
+                              << "(" << mothers_age << ")"
+                              << endl;
                 }
             }
             else if (!x.second->father && !x.second->mother)

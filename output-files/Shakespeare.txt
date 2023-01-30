@@ -36,7 +36,7 @@ Id of Individual        : @I0001@
 Name of Individual      : William Shakespeare
 Sex of Individual       : Male 
 Lived during            : [1564 - 1616] and died at age of 52
-Son of                  : John Shakespeare and Mary Arden
+Son of                  : John Shakespeare(33) and Mary Arden(27)
 
  *** 
 
@@ -44,7 +44,7 @@ Id of Individual        : @I0002@
 Name of Individual      : Mary Arden
 Sex of Individual       : Female 
 Lived during            : [1537 - 1608] and died at age of 71
-Daughter of             : Robert Arden and Agnes Webbe
+Daughter of             : Robert Arden(N.A) and Agnes Webbe(N.A)
 
  *** 
 
@@ -52,7 +52,7 @@ Id of Individual        : @I0003@
 Name of Individual      : John Shakespeare
 Sex of Individual       : Male 
 Lived during            : [1531 - 1601] and died at age of 70
-Son of                  : Richard Shakespeare and  Unknown
+Son of                  : Richard Shakespeare(41) and  Unknown(41)
 
  *** 
 
@@ -60,7 +60,7 @@ Id of Individual        : @I0004@
 Name of Individual      : Anne Hathaway
 Sex of Individual       : Female 
 Lived during            : [1556 - 1623] and died at age of 67
-Daughter of             : Richard Hathaway and 
+Daughter of             : Richard Hathaway(N.A) and (N.A)
 
  *** 
 
@@ -68,7 +68,7 @@ Id of Individual        : @I0005@
 Name of Individual      : Susanna Shakespeare
 Sex of Individual       : Female 
 Lived during            : [1583 - 1649] and died at age of 66
-Daughter of             : William Shakespeare and Anne Hathaway
+Daughter of             : William Shakespeare(19) and Anne Hathaway(27)
 
  *** 
 
@@ -76,7 +76,7 @@ Id of Individual        : @I0006@
 Name of Individual      : Hamnet Shakespeare
 Sex of Individual       : Male 
 Lived during            : [1585 - 1596] and died at age of 11
-Son of                  : William Shakespeare and Anne Hathaway
+Son of                  : William Shakespeare(21) and Anne Hathaway(29)
 
  *** 
 
@@ -84,7 +84,7 @@ Id of Individual        : @I0007@
 Name of Individual      : Judith Shakespeare
 Sex of Individual       : Female 
 Lived during            : [1585 - 1662] and died at age of 77
-Daughter of             : William Shakespeare and Anne Hathaway
+Daughter of             : William Shakespeare(21) and Anne Hathaway(29)
 
  *** 
 
@@ -92,7 +92,7 @@ Id of Individual        : @I0008@
 Name of Individual      : Joan Shakespeare
 Sex of Individual       : Female 
 Lived during            : [1558 - 1558] and died at age of 0
-Daughter of             : John Shakespeare and Mary Arden
+Daughter of             : John Shakespeare(27) and Mary Arden(21)
 
  *** 
 
@@ -100,7 +100,7 @@ Id of Individual        : @I0009@
 Name of Individual      : Margaret Shakespeare
 Sex of Individual       : Female 
 Lived during            : [1562 - 1563] and died at age of 1
-Daughter of             : John Shakespeare and Mary Arden
+Daughter of             : John Shakespeare(31) and Mary Arden(25)
 
  *** 
 
@@ -108,7 +108,7 @@ Id of Individual        : @I0010@
 Name of Individual      : Gilbert Shakespeare
 Sex of Individual       : Male 
 Lived during            : [1566 - 1612] and died at age of 46
-Son of                  : John Shakespeare and Mary Arden
+Son of                  : John Shakespeare(35) and Mary Arden(29)
 
  *** 
 
@@ -116,7 +116,7 @@ Id of Individual        : @I0011@
 Name of Individual      : Joan Shakespeare
 Sex of Individual       : Female 
 Lived during            : [1569 - 1646] and died at age of 77
-Daughter of             : John Shakespeare and Mary Arden
+Daughter of             : John Shakespeare(38) and Mary Arden(32)
 
  *** 
 
@@ -124,7 +124,7 @@ Id of Individual        : @I0012@
 Name of Individual      : Anne Shakespeare
 Sex of Individual       : Female 
 Lived during            : [1571 - 1579] and died at age of 8
-Daughter of             : John Shakespeare and Mary Arden
+Daughter of             : John Shakespeare(40) and Mary Arden(34)
 
  *** 
 
@@ -132,7 +132,7 @@ Id of Individual        : @I0013@
 Name of Individual      : Richard Shakespeare
 Sex of Individual       : Male 
 Lived during            : [1574 - 1613] and died at age of 39
-Son of                  : John Shakespeare and Mary Arden
+Son of                  : John Shakespeare(43) and Mary Arden(37)
 
  *** 
 
@@ -140,7 +140,7 @@ Id of Individual        : @I0014@
 Name of Individual      : Edmund Shakespeare
 Sex of Individual       : Male 
 Lived during            : [1580 - 1607] and died at age of 27
-Son of                  : John Shakespeare and Mary Arden
+Son of                  : John Shakespeare(49) and Mary Arden(43)
 
  *** 
 
@@ -156,7 +156,7 @@ Id of Individual        : @I0016@
 Name of Individual      : Henry Shakespeare
 Sex of Individual       : Male 
 Lived during            : [ - 1596]
-Son of                  : Richard Shakespeare and  Unknown
+Son of                  : Richard Shakespeare(N.A) and  Unknown(N.A)
 
  *** 
 
@@ -196,7 +196,7 @@ Id of Individual        : @I0021@
 Name of Individual      : Elizabeth Shakespeare
 Sex of Individual       : Female 
 Lived during            : [1608 - 1670] and died at age of 62
-Daughter of             : John Hall and Susanna Shakespeare
+Daughter of             : John Hall(33) and Susanna Shakespeare(25)
 
  *** 
 
@@ -228,7 +228,7 @@ Id of Individual        : @I0025@
 Name of Individual      : Shakespeare Quiney
 Sex of Individual       : Male 
 Lived during            : [1616 - 1617] and died at age of 1
-Son of                  : Thomas Quiney and Judith Shakespeare
+Son of                  : Thomas Quiney(27) and Judith Shakespeare(31)
 
  *** 
 
@@ -236,7 +236,7 @@ Id of Individual        : @I0026@
 Name of Individual      : Richard Quiney
 Sex of Individual       : Male 
 Lived during            : [1618 - 1639] and died at age of 21
-Son of                  : Thomas Quiney and Judith Shakespeare
+Son of                  : Thomas Quiney(29) and Judith Shakespeare(33)
 
  *** 
 
@@ -244,7 +244,7 @@ Id of Individual        : @I0027@
 Name of Individual      : Thomas Quiney
 Sex of Individual       : Male 
 Lived during            : [1620 - 1639] and died at age of 19
-Son of                  : Thomas Quiney and Judith Shakespeare
+Son of                  : Thomas Quiney(31) and Judith Shakespeare(35)
 
  *** 
 
@@ -268,7 +268,7 @@ Id of Individual        : @I0030@
 Name of Individual      : Not named Quiney
 Sex of Individual       : Other 
 Lived during            : [ - 1616]
-Child of                : Thomas Quiney and Margaret Wheeler
+Child of                 : Thomas Quiney(-1) and Margaret Wheeler(-1)
 
  *** 
 

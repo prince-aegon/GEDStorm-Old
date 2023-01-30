@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import indiData from '../assets/indi.json';
+import indiData from '../../../json_indi/indi.json';
 
 interface Individual {
   id: string;
