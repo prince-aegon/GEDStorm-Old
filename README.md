@@ -9,7 +9,7 @@ A parser in C++ for GEDCOM 5.5.5 Files.
 1. Compile and Run the C++ code:
    `g++ -std=c++11 parser.cpp -o parser; ./parser -f > output-files/Shakespeare.txt`
 
-   a. The -f flag indicates pushing the entire output to the file.
+   a. The -f flag indicates pushing the entire output to the file
    b. The -g flag indicated pushing only the generational output to file.
 
 2. Run the Python3 script:
@@ -17,7 +17,7 @@ A parser in C++ for GEDCOM 5.5.5 Files.
 3. cd to the Angular project folder:
    `cd gedcom-parser`
 
-4. Development Server
+4. Development Server:
    Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 #### Method 2:
