@@ -1,6 +1,6 @@
-# GEDCOM-Parser
+# GEDStorm
 
-A parser in C++ for GEDCOM 5.5.5 Files.
+A parser written in C++ for GEDCOM 5.5.5 Files.
 
 ## 1. Running the parser
 
