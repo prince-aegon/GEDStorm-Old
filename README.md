@@ -9,8 +9,8 @@ A parser written in C++ for GEDCOM 5.5.5 Files.
 1. Compile and Run the C++ code:
    `g++ -std=c++11 parser.cpp -o parser; ./parser -f > output-files/Shakespeare.txt`
 
-   a. The -f flag indicates pushing the entire output to the file.
-   b. The -g flag indicated pushing only the generational output to file.
+   a. The -f flag indicates pushing the entire output to the file\
+   b. The -g flag indicated pushing only the generational output to file
 
 2. Run the Python3 script:
    `python3 indi_parse.py`
