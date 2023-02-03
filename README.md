@@ -2,14 +2,14 @@
 
 A parser written in C++ for GEDCOM 5.5.5 Files.
 
-## 1. Running the parser
+## 1. Getting Started
 
 #### Method 1:
 
 1. Compile and Run the C++ code:
    `g++ -std=c++11 parser.cpp -o parser; ./parser -f > output-files/Shakespeare.txt`
 
-   a. The -f flag indicates pushing the entire output to the file
+   a. The -f flag indicates pushing the entire output to the file.
    b. The -g flag indicated pushing only the generational output to file.
 
 2. Run the Python3 script:
@@ -29,34 +29,38 @@ All the commands are entered in shell file at root. Run the file using:
 
 ### Current Status
 
-- Import a GEDCOM file into the program
+- Import a GEDCOM file into the program - Currently done manually in the codebase. Idea is to import a file in the Angular frontend.
 
-- THe header information will be parsed and displayed
+- THe header information will be parsed and displayed - Might give error in some specific format files
 
 - Added functionality of comments which can be parsed and stored based on req., and ignored from file
 
-- All individuals are parsed and their name, sex and id are displayed.
+- Based on the file format, most relevant and consistent info of individual and family are displayed
 
-- Number of individuals is calculated
+- Individuals and their families are linked together to get Relationships
 
-- Calculate and link individuals to families
-
-- Create modes to run based on user
+- Four specific modes to be designed for optimal usage
 
 - Process errors in file and display them appropriately
 
+- Currently pushing the objects onto a csv file and using a Python script to convert into JSON file.
+
+- Using Angular to create frontend from the JSON file data
+
 ### TODO
 
-- Calculate ages of individuals during events
+- [Not considered] Use [JSON Spirit](https://github.com/cierelabs/json_spirit) or [ThorsSerializer](https://github.com/Loki-Astari/ThorsSerializer) to convert our objects into JSON Strings
 
-- Use [JSON Spirit](https://github.com/cierelabs/json_spirit) or [ThorsSerializer](https://github.com/Loki-Astari/ThorsSerializer) to convert our objects into JSON Strings
+- Instead of storing the JSON file locally, use a database to store the same! (redis)
 
-- Use the json strings to store data on a web server
+- Improve the frontend to allow for filtering, sorting and searching options
 
-- On multiple parses of a single file, store the json object in a database like Postgres or MySql
+- File input from frontend (import the file from user's disk)
+
+- Fix bugs for specific files that do not parse correctly
 
 ### Future ideas
 
-- Process and correct error on the fly
+- Display graph/tree structure for family generations
 
-- Remove irrelevant and redundant data from the GEDCOM file before parsing
+- Compress a file removing irrelevant info, but that can still be parsed by the original parser
