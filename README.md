@@ -1,6 +1,6 @@
 # GEDStorm
 
-### Please find the new updated code [here](https://github.com/prince-aegon/GEDStorm)
+### **Please find the new updated code [here](https://github.com/prince-aegon/GEDStorm)**
 
 A parser written in C++ for GEDCOM 5.5.5 Files.
 
